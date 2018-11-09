@@ -1,0 +1,19 @@
+{
+    "name": "gsimmer/db-janitor",
+    "description": "Database cleanup and trimmer for Drupal",
+    "type": "library",
+    "license": "MPL-2.0",
+    "authors": [
+        {
+            "name": "Gabriel Simmer",
+            "email": "gsimmer@acromedia.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "ifsnop/mysqldump-php": "2.*"
+    },
+    "scripts": {
+        "db-janitor": "php src/gsimmer/database-janitor/DatabaseJanitorCli.php"
+    }
+}
