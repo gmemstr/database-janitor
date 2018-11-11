@@ -1,5 +1,7 @@
 <?php
 
+require_once('DatabaseJanitor.php');
+
 use DatabaseJanitor\DatabaseJanitor;
 
 // If running from CLI, use CLI mode.
@@ -8,14 +10,16 @@ if (defined('STDIN')) {
 
   // -- Load in configuration.
   $config = load_config();
+
   $janitor = new DatabaseJanitor(
     $config['database'],
-    $config['user'],
+    $config['username'],
     $config['host'],
     $config['password'],
-    $config['config'],
     $config
   );
+
+  $janitor->dump();
 
 }
 else {
@@ -29,6 +33,8 @@ else {
  *   Array of configuration values.
  */
 function load_config() {
+  global $argv;
+  $config = [];
   if (isset($argv)) {
     foreach (array_slice($argv,1) as $arg) {
       $arg_split = explode('=', $arg);
@@ -44,12 +50,12 @@ function load_config() {
     'host' => 'DB_JANITOR_HOST',
     'user' => 'DB_JANITOR_USER',
     'password' => 'DB_JANITOR_PASSWORD',
-    'database' => 'DB_JANITOR_DATABASE',q
+    'database' => 'DB_JANITOR_DATABASE',
   ];
   foreach ($env_vars as $key => $env_var) {
     $val = getenv($env_var);
     if (isset($val) && !isset($config[$key])) {
-      $config[$key] = $env_var;
+      $config[$key] = $val;
     }
   }
 
@@ -59,11 +65,13 @@ function load_config() {
   else {
     $config_json = file_get_contents(getcwd() . '/janitor.json');
   }
-  $config_json = json_decode($config_json)['config'];
+  $config_json = json_decode($config_json)->config;
 
   foreach ($config_json as $keyq => $value) {
     if (!isset($config[$key])) {
       $config[$key] = $value;
     }
   }
+
+  return $config;
 }

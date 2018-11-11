@@ -5,6 +5,7 @@
  */
 
 namespace DatabaseJanitor;
+require getcwd() . '/vendor/autoload.php';
 
 use Ifsnop\Mysqldump as IMysqldump;
 
@@ -43,7 +44,7 @@ class DatabaseJanitor {
    */
   public function dump() {
     try {
-      $dump = new IMysqldump\Mysqldump('mysql:host=' . $this->SqlHost . '=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
+      $dump = new IMysqldump\Mysqldump('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
       if (isset($this->dumpOptions)) {
         $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
           return sanitize($table_name, $col_name, $col_value, $this->dumpOptions['tables']);
@@ -52,14 +53,14 @@ class DatabaseJanitor {
       $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
         return santize_users($table_name, $col_name, $col_value, $this->dumpOptions['tables']);
       });
-      $dump->start('output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql');
+      $dump->start(getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql');
     }
     catch (\Exception $e) {
       echo 'mysqldump - php error: ' . $e->getMessage();
     }
   }
 
-  public function sanitize($table_name, $col_name, $col_value, $targets) {
+  private function sanitize($table_name, $col_name, $col_value, $targets) {
     if (in_array($col_name, $targets)) {
       return (string) rand(1000000, 9999999);
     }
@@ -67,7 +68,7 @@ class DatabaseJanitor {
     return $col_value;
   }
 
-  public function sanitize_users($table_name, $col_name, $col_value, $targets) {
+  private function sanitize_users($table_name, $col_name, $col_value, $targets) {
     if ($table_name == 'user') {
       switch ($col_name) {
         case 'password':
@@ -77,10 +78,6 @@ class DatabaseJanitor {
 
         case 'username':
         case 'email':
-          $col_value = "";
-          break;
-
-        default:
           $col_value = "";
           break;
       }
