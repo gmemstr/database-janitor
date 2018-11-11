@@ -19,7 +19,11 @@ if (defined('STDIN')) {
     $config
   );
 
+  printf("Starting dump of " . $config['database'] . " from " . $config['host'] . " at " . date('d-m-Y g:i:s') . "\n");
+
   $janitor->dump();
+
+  printf("Dump of " . $config['database'] . " from " . $config['host'] . " finished at " . date('d-m-Y g:i:s') . "\n");
 
 }
 else {
@@ -54,7 +58,7 @@ function load_config() {
   ];
   foreach ($env_vars as $key => $env_var) {
     $val = getenv($env_var);
-    if (isset($val) && !isset($config[$key])) {
+    if ($val && !isset($config[$key])) {
       $config[$key] = $val;
     }
   }
@@ -66,8 +70,9 @@ function load_config() {
     $config_json = file_get_contents(getcwd() . '/janitor.json');
   }
   $config_json = json_decode($config_json);
+  $c = $config_json->config;
 
-  foreach ($config_json->config as $key => $value) {
+  foreach ($c as $key => $value) {
     if (!isset($config[$key])) {
       $config[$key] = $value;
     }

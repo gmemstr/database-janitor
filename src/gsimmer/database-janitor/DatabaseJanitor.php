@@ -50,9 +50,11 @@ class DatabaseJanitor {
           return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions['tables']);
         });
       }
-      $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
-        return $this->sanitize_users($table_name, $col_name, $col_value);
-      });
+      if ($this->dumpOptions['sanitize_users']) {
+        $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
+          return $this->sanitize_users($table_name, $col_name, $col_value);
+        });
+      }
       $dump->start(getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql');
     }
     catch (\Exception $e) {
