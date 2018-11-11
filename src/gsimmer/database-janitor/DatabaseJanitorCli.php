@@ -65,13 +65,14 @@ function load_config() {
   else {
     $config_json = file_get_contents(getcwd() . '/janitor.json');
   }
-  $config_json = json_decode($config_json)->config;
+  $config_json = json_decode($config_json);
 
-  foreach ($config_json as $keyq => $value) {
+  foreach ($config_json->config as $key => $value) {
     if (!isset($config[$key])) {
       $config[$key] = $value;
     }
   }
+  $config['tables'] = $config_json->tables;
 
   return $config;
 }
