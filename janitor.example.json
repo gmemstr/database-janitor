@@ -1,0 +1,11 @@
+{
+  "config": {
+    "sanitize_users": true,
+    "trim": false
+  },
+  "tables": {
+    "commerce_order": [
+      "order_number"
+    ]
+  }
+}
