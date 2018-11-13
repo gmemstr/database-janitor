@@ -24,15 +24,25 @@ Configuration can be done in three ways, and it's recommended you use all three.
 command-line arguments. The CLI command then looks for specific environment variables, finally falling back to the
 `janitor.json` file.
 
+|JSON Key|ENV Key|CLI Key|What it does|Default value|
+|---|------------|-------------|---|---|
+|`sanitize_users`|none|none|Tells janitor whether or not to run drupal-specific sanitation on dump.|`true`|
+|`trim`|none|none|Whether or not we should attempt to cut down results in dump.|`false`|
+|`tables`|none|none|Specific tables and their columns to sanitize.|`{}`|
+|**not recommended** `host` |`DB_JANITOR_HOST`|`--host`|Specifies database host to connect to.| |
+|**not recommended** `password` |`DB_JANITOR_PASSWORD`|`--password`|Specifies database user password.| |
+|**not recommended** `database` |`DB_JANITOR_DATABASE`|`--database`|Specific database to dump.| |
+|**not recommended** `user` |`DB_JANITOR_USER`|`--username`|Database user.| |
+
 ```json
 {
-  "config": { <-- General configuration
-    "sanitize_users": true, <-- Provides sane sanitation for Drupal user tables.
-    "trim": false <-- Whether or not we should attempt to trim down the dump results (tbd).
+  "config": {
+    "sanitize_users": true,
+    "trim": false
   },
-  "tables": { <-- Specific tables/columns to sanitize.
-    "commerce_order": [ <-- Table
-      "order_number" <-- Column
+  "tables": {
+    "commerce_order": [
+      "order_number"
     ]
   }
 }

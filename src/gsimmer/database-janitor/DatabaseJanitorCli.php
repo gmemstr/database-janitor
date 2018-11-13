@@ -51,8 +51,6 @@ function load_config() {
 
   // Load env variables.
   $env_vars = [
-    'sanitize_users' => 'DB_JANITOR_SANITIZE_USERS',
-    'trim' => 'DB_JANITOR_TRIM',
     'host' => 'DB_JANITOR_HOST',
     'user' => 'DB_JANITOR_USER',
     'password' => 'DB_JANITOR_PASSWORD',
