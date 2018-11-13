@@ -94,7 +94,7 @@ class DatabaseJanitor {
                 return random_int(1000000, 9999999);
                 break;
               case "string":
-                return (string) random_int(1000000, 9999999);
+                return (string) random_int(1000000, 9999999) . '-janitor';
                 break;
 
               default:
