@@ -82,27 +82,47 @@ class DatabaseJanitor {
    *   New col value.
    */
   public function sanitize($table_name, $col_name, $col_value, $options) {
-    foreach ($options['tables'] as $table => $col) {
-      if ($table == $table_name && $col == $col_name) {
-        return (string) rand(1000000, 9999999);
+    foreach ($options['tables'] as $table => $val) {
+      if ($table == $table_name) {
+        foreach ($options['tables']->{$table} as $col) {
+          if ($col == $col_name) {
+            // Generate value based on the type of the actual value.
+            // Helps avoid breakage with incorrect types in cols.
+            switch(gettype($col_value)) {
+              case "integer":
+              case "double":
+                return random_int(1000000, 9999999);
+                break;
+              case "string":
+                return (string) random_int(1000000, 9999999);
+                break;
+
+              default:
+                return $col_value;
+            }
+          }
+        }
       }
     }
 
-    if ($table_name == 'user' || $table_name == 'users_field_data') {
-      switch ($col_name) {
-        case 'pass':
-          // Todo: Replace with default "password" as hash value.
-          $col_value = "some_unique_value";
-          break;
+    // Always sanitize users (unless otherwise set).
+    if ($options['sanitize_users']) {
+      if ($table_name == 'user' || $table_name == 'users_field_data') {
+        switch ($col_name) {
+          case 'pass':
+            // Todo: Replace with default "password" as hash value.
+            $col_value = "some_unique_value";
+            break;
 
-        case 'name':
-          $col_value = substr($col_value, 0, 4) . '-janitor';
-          break;
+          case 'name':
+            $col_value = substr($col_value, 0, 4) . '-janitor';
+            break;
 
-        case 'init':
-        case 'mail':
-          $col_value = substr($col_value, 0, 4) . '-janitor@email.com';
-          break;
+          case 'init':
+          case 'mail':
+            $col_value = substr($col_value, 0, 4) . '-janitor@email.com';
+            break;
+        }
       }
     }
 
