@@ -21,8 +21,10 @@ if (defined('STDIN')) {
 
   printf("Starting dump of " . $config['database'] . " from " . $config['host'] . " at " . date('d-m-Y g:i:s') . "\n");
 
-  $janitor->dump();
-
+  $output = $janitor->dump();
+  if (!$output) {
+    printf("Something went horribly wrong.");
+  }
   printf("Dump of " . $config['database'] . " from " . $config['host'] . " finished at " . date('d-m-Y g:i:s') . "\n");
 
 }

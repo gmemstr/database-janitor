@@ -41,36 +41,53 @@ class DatabaseJanitor {
 
   /**
    * Basic dumping.
+   *
+   * @return bool|string
+   *   FALSE if dump encountered an error, otherwise return location of dump.
    */
   public function dump() {
+
+    $dumpSettings = [
+      'add-locks' => FALSE,
+      'compress' => IMysqldump\Mysqldump::GZIP,
+      'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? '',
+    ];
     try {
       $dump = new IMysqldump\Mysqldump('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
-      if (isset($this->dumpOptions)) {
-        $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
-          return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions['tables']);
-        });
-      }
-      if ($this->dumpOptions['sanitize_users']) {
-        $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
-          return $this->sanitize_users($table_name, $col_name, $col_value);
-        });
-      }
-      $dump->start(getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql');
+      $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
+        return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions);
+      });
+      $dump->start(getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gzip', $dumpSettings);
     }
     catch (\Exception $e) {
       echo 'mysqldump - php error: ' . $e->getMessage();
+      return FALSE;
     }
+    return getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gzip';
   }
 
-  public function sanitize($table_name, $col_name, $col_value, $targets) {
-    if (in_array($col_name, $targets)) {
-      return (string) rand(1000000, 9999999);
+  /**
+   * Replace values in specific table col with random value.
+   *
+   * @param $table_name
+   *   The current table's name.
+   * @param $col_name
+   *   The current column name.
+   * @param $col_value
+   *   The current value in the column.
+   * @param $targets
+   *   Column names we want to sanitize.
+   *
+   * @return string
+   *   New col value.
+   */
+  public function sanitize($table_name, $col_name, $col_value, $options) {
+    foreach ($options['tables'] as $table => $col) {
+      if ($table == $table_name && $col == $col_name) {
+        return (string) rand(1000000, 9999999);
+      }
     }
 
-    return $col_value;
-  }
-
-  public function sanitize_users($table_name, $col_name, $col_value) {
     if ($table_name == 'user' || $table_name == 'users_field_data') {
       switch ($col_name) {
         case 'pass':
@@ -90,5 +107,9 @@ class DatabaseJanitor {
     }
 
     return $col_value;
+  }
+
+  public function trim() {
+
   }
 }
