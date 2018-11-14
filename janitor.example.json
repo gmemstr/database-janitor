@@ -1,11 +1,16 @@
 {
   "config": {
     "sanitize_users": true,
-    "trim": false
+    "trim": false,
+    "trim_database": {
+      "host": "localhost:8787",
+      "user": "trim",
+      "password": "trim",
+      "database": "trim"
+    },
   },
   "tables": {
-    "commerce_order": [
-      "order_number"
-    ]
-  }
+  },
+  "trim_tables": [
+  ]
 }

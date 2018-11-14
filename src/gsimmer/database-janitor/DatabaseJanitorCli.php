@@ -19,21 +19,40 @@ if (defined('STDIN')) {
     $config
   );
 
-  printf("Starting dump of " . $config['database'] . " from " . $config['host'] . " at " . date('d-m-Y g:i:s') . "\n");
-
-  $output = $janitor->dump();
-  if (!$output) {
-    printf("Something went horribly wrong.");
+  // Only dump if trim is not set (--trim=true).
+  if (!$config['trim']) {
+    printf("Dump of " . $config['database'] . " from " . $config['host'] . " started at " . date('d-m-Y g:i:s') . "\n");
+    $output = $janitor->dump();
+    if (!$output) {
+      printf("Something went horribly wrong.\n");
+    }
+    printf("Dump of " . $config['database'] . " from " . $config['host'] . " finished at " . date('d-m-Y g:i:s') . "\nSaved to " . $output);
   }
-  printf("Dump of " . $config['database'] . " from " . $config['host'] . " finished at " . date('d-m-Y g:i:s') . "\n");
 
+  // Optionally trim the database, requires the earlier dump to be loaded into
+  // the "trim database".
+  else {
+    $trim_output = $janitor->trim($config['trim_database']);
+    if (!$trim_output) {
+      printf("No tables were trimmed.\n");
+    }
+    else {
+      printf("Trimmed database, dumping.\n");
+    }
+    $output = $janitor->dump(getcwd() . '/output/' . $config['host'] . '_' . $config['database'] . '-trimmed.sql.gz');
+    if (!$output) {
+      printf("Something went horribly wrong.");
+    }
+    printf("Dump of " . $config['database'] . " from " . $config['host'] . " finished at " . date('d-m-Y g:i:s') . "\nSaved to " . $output);
+  }
 }
+// If not executing from CLI just exit.
 else {
   exit();
 }
 
 /**
- * Loads/refreshes configuration.
+ * Loads/refreshes configuration from args, env and json.
  *
  * @return array
  *   Array of configuration values.
@@ -41,7 +60,7 @@ else {
 function load_config() {
   global $argv;
   $config = [];
-  if (isset($argv)) {
+  if (array_slice($argv,1) !== null) {
     foreach (array_slice($argv,1) as $arg) {
       $arg_split = explode('=', $arg);
       $arg_split[0] = str_replace('--', '', $arg_split[0]);
@@ -78,6 +97,7 @@ function load_config() {
     }
   }
   $config['tables'] = $config_json->tables;
+  $config['trim_tables'] = $config_json->trim_tables;
 
   return $config;
 }

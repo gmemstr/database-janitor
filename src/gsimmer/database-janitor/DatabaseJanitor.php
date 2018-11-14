@@ -45,8 +45,10 @@ class DatabaseJanitor {
    * @return bool|string
    *   FALSE if dump encountered an error, otherwise return location of dump.
    */
-  public function dump() {
-
+  public function dump($output = FALSE) {
+    if (!$output) {
+      $output = getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gz';
+    }
     $dumpSettings = [
       'add-locks' => FALSE,
       'compress' => IMysqldump\Mysqldump::GZIP,
@@ -57,13 +59,13 @@ class DatabaseJanitor {
       $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
         return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions);
       });
-      $dump->start(getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gzip', $dumpSettings);
+      $dump->start($output);
     }
     catch (\Exception $e) {
       echo 'mysqldump - php error: ' . $e->getMessage();
       return FALSE;
     }
-    return getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gzip';
+    return $output;
   }
 
   /**
@@ -129,7 +131,40 @@ class DatabaseJanitor {
     return $col_value;
   }
 
-  public function trim() {
-
+  /**
+   * Removes every other row from specified table.
+   *
+   * @param array $temp_sql_details
+   *   Array of temporary SQL database details.
+   *
+   * @return array|bool
+   *   FALSE if something goes wrong, otherwise array of removed items.
+   */
+  public function trim($temp_sql_details) {
+    try {
+      $connection = new \PDO('mysql:host=' . $temp_sql_details->host . ';dbname=' . $temp_sql_details->database, $temp_sql_details->user, $temp_sql_details->password);
+    }
+    catch (\PDOException $e) {
+      echo $e;
+      return FALSE;
+    }
+    $removed = [];
+    foreach ($this->dumpOptions['trim_tables'] as $table) {
+      $primary_key = $connection->query("SHOW KEYS FROM " . $table . " WHERE Key_name = 'PRIMARY'");
+      if ($primary_key) {
+        $all = $connection->query("SELECT " . $primary_key . " FROM " . $table);
+        $removed[$table] = [];
+        foreach ($all as $key => $row) {
+          // Delete every other row.
+          if ($key % 2 > 0) {
+            continue;
+          }
+          $removed[$table][] = $primary_key;
+          $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $key);
+        }
+      }
+    }
+    return $removed;
   }
+
 }

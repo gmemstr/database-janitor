@@ -18,6 +18,10 @@ as the composer version seems to be older and does't support hooks.
 This application can either be used as a CLI app or a library that other applications can build on top of, e.g a drush
 command or another custom application.
 
+### Testing
+
+There is a sample lando config you can use to spin up two separate mysql databases for testing.
+
 ### Configuration
 
 Configuration can be done in three ways, and it's recommended you use all three. First, values are loaded from the
@@ -27,12 +31,13 @@ command-line arguments. The CLI command then looks for specific environment vari
 |JSON Key|ENV Key|CLI Key|What it does|Default value|
 |---|------------|-------------|---|---|
 |`sanitize_users`|none|none|Tells janitor whether or not to run drupal-specific sanitation on dump.|`true`|
-|`trim`|none|none|Whether or not we should attempt to cut down results in dump.|`false`|
+|`trim`|none|`--trim`|Whether or not we should attempt to cut down results in dump.|`false`|
 |`tables`|none|none|Specific tables and their columns to sanitize.|`{}`|
-|**not recommended** `host` |`DB_JANITOR_HOST`|`--host`|Specifies database host to connect to.| |
-|**not recommended** `password` |`DB_JANITOR_PASSWORD`|`--password`|Specifies database user password.| |
-|**not recommended** `database` |`DB_JANITOR_DATABASE`|`--database`|Specific database to dump.| |
-|**not recommended** `user` |`DB_JANITOR_USER`|`--username`|Database user.| |
+|**not recommended** `host` |`DB_JANITOR_HOST`|`--host=[host]`|Specifies database host to connect to.| |
+|**not recommended** `password` |`DB_JANITOR_PASSWORD`|`--password=[password]`|Specifies database user password.| |
+|**not recommended** `database` |`DB_JANITOR_DATABASE`|`--database=[database]`|Specific database to dump.| |
+|**not recommended** `user` |`DB_JANITOR_USER`|`--username=[username]`|Database user.| |
+| none | |`--config=[config file]`|Custom configuration file.| |
 
 ```json
 {

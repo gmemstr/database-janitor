@@ -1,0 +1,21 @@
+name: database-janitor-test
+recipe: custom
+config:
+  webroot: .
+
+services:
+  real_database:
+    type: mariadb
+    portforward: 8787
+    creds:
+      user: real
+      password: real
+      database: real
+
+  trim_database:
+    type: mariadb
+    portforward: 8788
+    creds:
+      user: trim
+      password: trim
+      database: trim
