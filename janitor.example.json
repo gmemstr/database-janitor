@@ -9,8 +9,15 @@
       "database": "trim"
     }
   },
-  "tables": {
+  "sanitize_tables": {
+    "some_table": [
+      "some_col"
+    ]
   },
   "trim_tables": [
+    "some_table"
+  ],
+  "excluded_tables": [
+    "some_table"
   ]
 }

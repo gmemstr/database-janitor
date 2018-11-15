@@ -96,8 +96,9 @@ function load_config() {
       $config[$key] = $value;
     }
   }
-  $config['tables'] = $config_json->tables;
+  $config['tables'] = $config_json->sanitize_tables;
   $config['trim_tables'] = $config_json->trim_tables;
+  $config['excluded_tables'] = $config_json->excluded_tables;
 
   return $config;
 }

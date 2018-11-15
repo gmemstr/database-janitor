@@ -32,25 +32,39 @@ command-line arguments. The CLI command then looks for specific environment vari
 |---|------------|-------------|---|---|
 |`sanitize_users`|none|none|Tells janitor whether or not to run drupal-specific sanitation on dump.|`true`|
 |`trim`|none|`--trim`|Whether or not we should attempt to cut down results in dump.|`false`|
-|`tables`|none|none|Specific tables and their columns to sanitize.|`{}`|
+|`sanitize_tables`|none|none|Specific tables and their columns to sanitize.| |
 |**not recommended** `host` |`DB_JANITOR_HOST`|`--host=[host]`|Specifies database host to connect to.| |
 |**not recommended** `password` |`DB_JANITOR_PASSWORD`|`--password=[password]`|Specifies database user password.| |
 |**not recommended** `database` |`DB_JANITOR_DATABASE`|`--database=[database]`|Specific database to dump.| |
 |**not recommended** `user` |`DB_JANITOR_USER`|`--username=[username]`|Database user.| |
 | none | |`--config=[config file]`|Custom configuration file.| |
 | `trim_database` | none | none | The server to use when trimming data (see: [#Trimming](#trimming)).|Lando|
+| `trim_tables` | none | none | Tables to trim prior to dumping data.| |
+| `excluded_tables` | none | none | Tables to exlude when dumping data.| |
 
 ```json
 {
   "config": {
     "sanitize_users": true,
-    "trim": false
+    "trim": false,
+    "trim_database": {
+      "host": "localhost:8787",
+      "user": "trim",
+      "password": "trim",
+      "database": "trim"
+    }
   },
-  "tables": {
-    "commerce_order": [
-      "order_number"
+  "sanitize_tables": {
+    "some_table": [
+      "some_col"
     ]
-  }
+  },
+  "trim_tables": [
+    "some_table"
+  ],
+  "excluded_tables": [
+    "some_table"
+  ]
 }
 ```
 

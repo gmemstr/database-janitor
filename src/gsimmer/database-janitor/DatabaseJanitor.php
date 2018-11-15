@@ -156,10 +156,10 @@ class DatabaseJanitor {
         $removed[$table] = [];
         foreach ($all as $key => $row) {
           // Delete every other row.
-          if ($key % 2 > 0) {
+          if ($key % 4 == 0) {
             continue;
           }
-          $removed[$table][] = $primary_key;
+          $removed[$table][] = $row[$primary_key];
           $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
         }
       }
