@@ -9,9 +9,15 @@
             "email": "gsimmer@acromedia.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ifsnop/mysqldump-php"
+        }
+    ],
     "minimum-stability": "dev",
     "require": {
-        "ifsnop/mysqldump-php": "2.5"
+        "ifsnop/mysqldump-php": "master"
     },
     "scripts": {
         "db-janitor": "php src/gsimmer/database-janitor/DatabaseJanitorCli.php"

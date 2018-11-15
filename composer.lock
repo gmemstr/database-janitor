@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "00ac2c4e1806024775dbdea9d8d5320f",
+    "content-hash": "a54a921e155aaaf0d78c7956d156a755",
     "packages": [
         {
             "name": "ifsnop/mysqldump-php",
-            "version": "v2.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ifsnop/mysqldump-php.git",
-                "reference": "8d063449981e3f7bd28a3a083842e21a24d1f4af"
+                "reference": "16b7dc787ea494165eb948d6a5920a315456bd26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ifsnop/mysqldump-php/zipball/8d063449981e3f7bd28a3a083842e21a24d1f4af",
-                "reference": "8d063449981e3f7bd28a3a083842e21a24d1f4af",
+                "url": "https://api.github.com/repos/ifsnop/mysqldump-php/zipball/16b7dc787ea494165eb948d6a5920a315456bd26",
+                "reference": "16b7dc787ea494165eb948d6a5920a315456bd26",
                 "shasum": ""
             },
             "require": {
@@ -33,9 +33,8 @@
                     "Ifsnop\\": "src/Ifsnop/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "GPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -44,19 +43,26 @@
                     "role": "Developer"
                 }
             ],
-            "description": "This is a php version of linux's mysqldump in terminal \"$ mysqldump -u username -p...\"",
+            "description": "PHP version of mysqldump cli that comes with MySQL",
             "homepage": "https://github.com/ifsnop/mysqldump-php",
             "keywords": [
-                "backup",
                 "database",
-                "dump",
-                "export",
+                "hhvm",
+                "mariadb",
                 "mysql",
+                "mysql-backup",
                 "mysqldump",
                 "pdo",
-                "sqlite"
+                "php",
+                "php5",
+                "php7",
+                "sql"
             ],
-            "time": "2018-06-30T19:40:05+00:00"
+            "support": {
+                "source": "https://github.com/ifsnop/mysqldump-php/tree/master",
+                "issues": "https://github.com/ifsnop/mysqldump-php/issues"
+            },
+            "time": "2018-10-12T22:21:12+00:00"
         }
     ],
     "packages-dev": [],
