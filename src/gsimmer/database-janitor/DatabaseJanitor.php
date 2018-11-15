@@ -49,6 +49,7 @@ class DatabaseJanitor {
     if (!$output) {
       $output = getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gz';
     }
+    if (!is_dir($output) && !mkdir($output) && !is_dir($output)) {}
 
     if ($host) {
       $this->SqlDatabase     = $host->database;

@@ -20,7 +20,13 @@ command or another custom application.
 
 ### Testing
 
-There is a sample lando config you can use to spin up two separate mysql databases for testing.
+There is a sample Lando config you can use to spin up two separate mysql databases for testing, as well as a sample SQL
+file containing random data.
+
+```bash
+lando start
+lando db-import sampledata.sql --host real_database; lando db-import sampledata.sql --host trim_database
+```
 
 ### Configuration
 
