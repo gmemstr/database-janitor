@@ -160,7 +160,7 @@ class DatabaseJanitor {
             continue;
           }
           $removed[$table][] = $primary_key;
-          $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $key);
+          $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
         }
       }
     }

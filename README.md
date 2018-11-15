@@ -38,6 +38,7 @@ command-line arguments. The CLI command then looks for specific environment vari
 |**not recommended** `database` |`DB_JANITOR_DATABASE`|`--database=[database]`|Specific database to dump.| |
 |**not recommended** `user` |`DB_JANITOR_USER`|`--username=[username]`|Database user.| |
 | none | |`--config=[config file]`|Custom configuration file.| |
+| `trim_database` | none | none | The server to use when trimming data (see: [#Trimming](#trimming)).|Lando|
 
 ```json
 {
