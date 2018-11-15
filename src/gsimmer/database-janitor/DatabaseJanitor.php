@@ -51,11 +51,11 @@ class DatabaseJanitor {
     }
     $dumpSettings = [
       'add-locks' => FALSE,
-      'compress' => IMysqldump\Mysqldump::GZIP,
-      'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? '',
+      'compress' => 'Gzip',
+      'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? [],
     ];
     try {
-      $dump = new IMysqldump\Mysqldump('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
+      $dump = new IMysqldump\Mysqldump('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword, $dumpSettings);
       $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
         return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions);
       });
@@ -150,9 +150,9 @@ class DatabaseJanitor {
     }
     $removed = [];
     foreach ($this->dumpOptions['trim_tables'] as $table) {
-      $primary_key = $connection->query("SHOW KEYS FROM " . $table . " WHERE Key_name = 'PRIMARY'");
+      $primary_key = $connection->query("SHOW KEYS FROM " . $table . " WHERE Key_name = 'PRIMARY'")->fetch()['Column_name'];
       if ($primary_key) {
-        $all = $connection->query("SELECT " . $primary_key . " FROM " . $table);
+        $all = $connection->query("SELECT " . $primary_key . " FROM " . $table)->fetchAll();
         $removed[$table] = [];
         foreach ($all as $key => $row) {
           // Delete every other row.

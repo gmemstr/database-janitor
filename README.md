@@ -68,7 +68,30 @@ First you'll want to copy `janitor.example.json` to `janitor.json`, which will s
 You can technically define all your configuration within, but it's strongly encouraged you move more sensitive values
 (passwords, usersnames) to either the command line args or ENV variables.
 
+Then install our dependencies with `composer install`.
+
+#### Dumping
+
+This will produce a gzip'd .sql file in the `output/` directory.
+
 ```bash
-composer install
 php src/gsimmer/database-janitor/DatabaseJanitorCli.php --host=localhost --username=[sql username] --password=[sql password] --database=[sql database]
+```
+
+#### Trimming
+
+Trimming is an experimental feature to try and reduce the amount of data in a dump, allowing for smaller 
+local databases for development.
+
+**Warning** 
+You'll want to edit the `trim_database` configuration to point to a _new server_. **DO NOT** run the trim
+command on your actual database - it's recommended you dump the data first, then import it into a seperate
+database since this command is destructive.
+
+It is not currently possible pass this database as CLI arguments, so it's recommenced you run this under
+a Docker environment so you don't leak your actual server credentials (even better, have this as part of
+your CI).
+
+```bash
+php src/gsimmer/database-janitor/DatabaseJanitorCli.php --trim=true
 ```

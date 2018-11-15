@@ -19,3 +19,17 @@ services:
       user: trim
       password: trim
       database: trim
+
+tooling:
+  'db-import ':
+    service: :host
+    description: Import  into database
+    cmd: /helpers/sql-import.sh
+    options:
+      host:
+        description: The database service to use
+        default: database
+        alias:
+        - h
+      no-wipe:
+        description: Do not destroy the existing database before an import
