@@ -39,7 +39,7 @@ if (defined('STDIN')) {
     else {
       printf("Trimmed database, dumping.\n");
     }
-    $output = $janitor->dump(getcwd() . '/output/' . $config['host'] . '_' . $config['database'] . '-trimmed.sql.gz');
+    $output = $janitor->dump($config['trim_database'], getcwd() . '/output/' . $config['host'] . '_' . $config['database'] . '-trimmed.sql.gz');
     if (!$output) {
       printf("Something went horribly wrong.");
     }

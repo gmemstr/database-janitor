@@ -45,10 +45,18 @@ class DatabaseJanitor {
    * @return bool|string
    *   FALSE if dump encountered an error, otherwise return location of dump.
    */
-  public function dump($output = FALSE) {
+  public function dump($host = FALSE, $output = FALSE) {
     if (!$output) {
       $output = getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gz';
     }
+
+    if ($host) {
+      $this->SqlDatabase     = $host->database;
+      $this->SqlUser         = $host->user;
+      $this->SqlHost         = $host->host;
+      $this->SqlPassword     = $host->password;
+    }
+
     $dumpSettings = [
       'add-locks' => FALSE,
       'compress' => 'Gzip',
