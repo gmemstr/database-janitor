@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+
+use DatabaseJanitor\DatabaseJanitorCommand;
+use Symfony\Component\Console\Application;
+
+require __DIR__ . '/src/DatabaseJanitorCommand.php';
+require __DIR__ . '/vendor/autoload.php';
+
+$interface = new Application('database-janitor', '0.1 (alpha)');
+$command = new DatabaseJanitorCommand();
+$interface->add($command);
+$interface->setDefaultCommand($command->getName(), true);
+$interface->run();

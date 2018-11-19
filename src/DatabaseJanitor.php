@@ -49,7 +49,6 @@ class DatabaseJanitor {
     if (!$output) {
       $output = getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gz';
     }
-    if (!is_dir($output) && !mkdir($output) && !is_dir($output)) {}
 
     if ($host) {
       $this->SqlDatabase     = $host->database;
@@ -157,23 +156,23 @@ class DatabaseJanitor {
       echo $e;
       return FALSE;
     }
-    $removed = [];
+    $ignore = [];
     foreach ($this->dumpOptions['trim_tables'] as $table) {
-      $primary_key = $connection->query("SHOW KEYS FROM " . $table . " WHERE Key_name = 'PRIMARY'")->fetch()['Column_name'];
+      $ignore[] = $table;
+      $connection->exec("SELECT " . $table . " INTO janitor_" . $table);
+      $primary_key = $connection->query("SHOW KEYS FROM janitor_" . $table . " WHERE Key_name = 'PRIMARY'")->fetch()['Column_name'];
       if ($primary_key) {
-        $all = $connection->query("SELECT " . $primary_key . " FROM " . $table)->fetchAll();
-        $removed[$table] = [];
+        $all = $connection->query("SELECT " . $primary_key . " FROM janitor_" . $table)->fetchAll();
         foreach ($all as $key => $row) {
           // Delete every other row.
           if ($key % 4 == 0) {
             continue;
           }
-          $removed[$table][] = $row[$primary_key];
-          $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
+          $connection->exec("DELETE FROM janitor_" . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
         }
       }
     }
-    return $removed;
+    return $ignore;
   }
 
 }

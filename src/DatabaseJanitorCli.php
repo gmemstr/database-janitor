@@ -32,7 +32,22 @@ if (defined('STDIN')) {
   // Optionally trim the database, requires the earlier dump to be loaded into
   // the "trim database".
   else {
-    $trim_output = $janitor->trim($config['trim_database']);
+    printf("Trim and dump of " . $config['database'] . " from " . $config['host'] . " started at " . date('d-m-Y g:i:s') . "\n");
+
+    $ignore_tables = $janitor->trim($config['trim_database']);
+
+    foreach ($ignore_tables as $ignore_table) {
+      $config['excluded_tables'][] = $ignore_table;
+    }
+    // Reload configuration with new ignore tables.
+    $janitor = new DatabaseJanitor(
+      $config['database'],
+      $config['username'],
+      $config['host'],
+      $config['password'],
+      $config
+    );
+
     if (!$trim_output) {
       printf("No tables were trimmed.\n");
     }
