@@ -92,7 +92,7 @@ Then install our dependencies with `composer install`.
 This will produce a gzip'd .sql file in the `output/` directory.
 
 ```bash
-php src/gsimmer/database-janitor/DatabaseJanitorCli.php --host=localhost --username=[sql username] --password=[sql password] --database=[sql database]
+php src/DatabaseJanitorCli.php --host=localhost --username=[sql username] --password=[sql password] --database=[sql database]
 ```
 
 #### Trimming
@@ -110,5 +110,5 @@ a Docker environment so you don't leak your actual server credentials (even bett
 your CI).
 
 ```bash
-php src/gsimmer/database-janitor/DatabaseJanitorCli.php --trim=true
+php src/DatabaseJanitorCli.php --trim=true
 ```
