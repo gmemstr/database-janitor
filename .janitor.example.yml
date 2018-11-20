@@ -1,0 +1,13 @@
+santize_tables:
+  trim2:
+    - email
+    - gender
+trim_tables:
+  - trim1
+excluded_tables:
+  - []
+trim_database:
+  host: 127.0.0.1:8788
+  user: trim
+  password: trim
+  database: trim
