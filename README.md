@@ -27,6 +27,7 @@ lando db-import sampledata.sql --host real_database; lando db-import sampledata.
 ### Configuration
 
 ```yaml
+# .janitor.yml
 sanitize_tables:
 # List of tables and their columns you want sanitized.
   user:
