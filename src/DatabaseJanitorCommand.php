@@ -74,7 +74,9 @@ class DatabaseJanitorCommand extends Command {
     // Optionally trim the database, requires the earlier dump to be loaded into
     // the "trim database".
     else {
-      $ignore_tables = $this->janitor->trim($this->configuration['trim_database']);
+      $trimmed_tables = $this->janitor->trim();
+      $scrubbed_tables = $this->janitor->scrub();
+      $ignore_tables = array_merge($trimmed_tables, $scrubbed_tables);
 
       foreach ($ignore_tables as $ignore_table) {
         $this->configuration['excluded_tables'][] = $ignore_table;

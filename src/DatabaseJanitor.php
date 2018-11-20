@@ -122,9 +122,6 @@ class DatabaseJanitor {
   /**
    * Removes every other row from specified table.
    *
-   * @param array $temp_sql_details
-   *   Array of temporary SQL database details.
-   *
    * @return array|bool
    *   FALSE if something goes wrong, otherwise array of removed items.
    */
@@ -158,6 +155,38 @@ class DatabaseJanitor {
     return $ignore;
   }
 
+  /**
+   * Completely scrub a table (aka truncate).
+   *
+   * @return array|bool
+   */
+  public function scrub() {
+    try {
+      $connection = new \PDO('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
+    }
+    catch (\PDOException $e) {
+      echo $e;
+      return FALSE;
+    }
+    $ignore = [];
+    foreach ($this->dumpOptions['scrub_tables'] as $table) {
+      // Rename table and copy is over.
+      $connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
+      $ignore[] = 'original_' . $table;
+      $connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
+      $connection->exec("TRUNCATE " . $table);
+    }
+    return $ignore;
+  }
+
+  /**
+   * Post-run to rename the original tables back.
+   *
+   * @param array $tables
+   *   Tables to rename, in the form original_X
+   *
+   * @return bool
+   */
   public function cleanup($tables) {
     try {
       $connection = new \PDO('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
@@ -167,7 +196,12 @@ class DatabaseJanitor {
       return FALSE;
     }
     foreach ($tables as $table) {
-      $table = explode('_', $table)[1];
+      // Bit of a funky replace, but make sure we DO NOT alter the original
+      // table name.
+      $table = explode('_', $table);
+      unset($table[0]);
+      $table = implode('_', $table);
+
       $connection->exec("DROP TABLE " . $table);
       $connection->exec("ALTER TABLE original_" . $table . " RENAME TO " .$table);
     }
