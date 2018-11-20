@@ -49,18 +49,12 @@ class DatabaseJanitorCommand extends Command {
     $helper = $this->getHelper('question');
     $this->host = $input->getOption('host');
     $this->database = $input->getArgument('database');
-    if ($input->hasOption('username')) {
-      $this->username = $input->getOption('username');
-    }
-    else {
-      $question = new Question('Enter database user:');
+    if (!$this->username = $input->getOption('username')) {
+      $question = new Question('Enter database user: ');
       $this->username = $helper->ask($input, $output, $question);
     }
-    if ($input->hasOption('password')) {
-      $this->password = $input->getOption('password');
-    }
-    else {
-      $question = new Question('Enter database password for ' . $this->username . ':');
+    if (!$this->password = $input->getOption('password')) {
+      $question = new Question('Enter database password for ' . $this->username . ': ');
       $question->setHidden(true);
       $question->setHiddenFallback(false);
       $this->password = $helper->ask($input, $output, $question);

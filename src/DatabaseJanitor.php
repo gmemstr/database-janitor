@@ -91,10 +91,10 @@ class DatabaseJanitor {
    *   New col value.
    */
   public function sanitize($table_name, $col_name, $col_value, $options) {
-    if (isset($options['tables'])) {
-      foreach ($options['tables'] as $table => $val) {
+    if (isset($options['sanitize_tables'])) {
+      foreach ($options['sanitize_tables'] as $table => $val) {
         if ($table == $table_name) {
-          foreach ($options['tables']->{$table} as $col) {
+          foreach ($options['sanitize_tables'][$table] as $col) {
             if ($col == $col_name) {
               // Generate value based on the type of the actual value.
               // Helps avoid breakage with incorrect types in cols.
@@ -112,27 +112,6 @@ class DatabaseJanitor {
               }
             }
           }
-        }
-      }
-    }
-
-    // Always sanitize users (unless otherwise set).
-    if ($options['sanitize_users']) {
-      if ($table_name == 'user' || $table_name == 'users_field_data') {
-        switch ($col_name) {
-          case 'pass':
-            // Todo: Replace with default "password" as hash value.
-            $col_value = "some_unique_value";
-            break;
-
-          case 'name':
-            $col_value = substr($col_value, 0, 4) . '-janitor';
-            break;
-
-          case 'init':
-          case 'mail':
-            $col_value = substr($col_value, 0, 4) . '-janitor@email.com';
-            break;
         }
       }
     }

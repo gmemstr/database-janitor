@@ -1,4 +1,4 @@
-santize_tables:
+sanitize_tables:
   trim2:
     - email
     - gender
