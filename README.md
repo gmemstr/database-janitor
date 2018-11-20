@@ -26,89 +26,43 @@ lando db-import sampledata.sql --host real_database; lando db-import sampledata.
 
 ### Configuration
 
-Configuration can be done in three ways, and it's recommended you use all three. First, values are loaded from the
-command-line arguments. The CLI command then looks for specific environment variables, finally falling back to the
-`janitor.json` file.
-
-|JSON Key|ENV Key|CLI Key|What it does|Default value|
-|---|------------|-------------|---|---|
-|`sanitize_users`|none|none|Tells janitor whether or not to run drupal-specific sanitation on dump.|`true`|
-|`trim`|none|`--trim`|Whether or not we should attempt to cut down results in dump.|`false`|
-|`sanitize_tables`|none|none|Specific tables and their columns to sanitize.| |
-|**not recommended** `host` |`DB_JANITOR_HOST`|`--host=[host]`|Specifies database host to connect to.| |
-|**not recommended** `password` |`DB_JANITOR_PASSWORD`|`--password=[password]`|Specifies database user password.| |
-|**not recommended** `database` |`DB_JANITOR_DATABASE`|`--database=[database]`|Specific database to dump.| |
-|**not recommended** `user` |`DB_JANITOR_USER`|`--username=[username]`|Database user.| |
-| none | |`--config=[config file]`|Custom configuration file.| |
-| `trim_database` | none | none | The server to use when trimming data (see: [#Trimming](#trimming)).|Lando|
-| `trim_tables` | none | none | Tables to trim prior to dumping data.| |
-| `excluded_tables` | none | none | Tables to exlude when dumping data.| |
-
-```json
-{
-  "config": {
-    "sanitize_users": true,
-    "trim": false,
-    "trim_database": {
-      "host": "localhost:8787",
-      "user": "trim",
-      "password": "trim",
-      "database": "trim"
-    }
-  },
-  "sanitize_tables": {
-    "some_table": [
-      "some_col"
-    ]
-  },
-  "trim_tables": [
-    "some_table"
-  ],
-  "excluded_tables": [
-    "some_table"
-  ]
-}
+```yaml
+sanitize_tables:
+  trim2:
+    - email
+    - gender
+trim_tables:
+  - trim1
+excluded_tables:
+  - []
+trim_database:
+  host: 127.0.0.1:8788
+  user: trim
+  password: trim
+  database: trim
 ```
-
-```bash
-export DB_JANITOR_HOST='localhost'
-export DB_JANITOR_USER='[sql user]'
-export DB_JANITOR_PASSWORD='[sql password]'
-export DB_JANITOR_DATABASE='[sql database]'
-```
-
-Remember, Database Janitor prefers arguments > env variables > json configuration.
 
 ### CLI
 
-First you'll want to copy `janitor.example.json` to `janitor.json`, which will serve as the primary configuration file.
-You can technically define all your configuration within, but it's strongly encouraged you move more sensitive values
-(passwords, usersnames) to either the command line args or ENV variables.
+First you'll want to copy `.janitor.example.yml` to `.janitor.yml`. You can then go in and edit exactly which tables and
+columns you want sanitized/ignored/cleared.
 
-Then install our dependencies with `composer install`.
+Then install dependencies with `composer install`.
 
 #### Dumping
 
-This will produce a gzip'd .sql file in the `output/` directory.
+This will prompt you for the database password, then produce a gzip'd .sql file in the `output/` directory.
+
+By default Janitor output to STDOUT for piping.
 
 ```bash
-php src/DatabaseJanitorCli.php --host=localhost --username=[sql username] --password=[sql password] --database=[sql database]
+./database-janitor --host=localhost:8787 --username=real real | gzip -c > output/real_test.sql.gz
 ```
 
 #### Trimming
 
-Trimming is an experimental feature to try and reduce the amount of data in a dump, allowing for smaller 
-local databases for development.
-
-**Warning** 
-You'll want to edit the `trim_database` configuration to point to a _new server_. **DO NOT** run the trim
-command on your actual database - it's recommended you dump the data first, then import it into a seperate
-database since this command is destructive.
-
-It is not currently possible pass this database as CLI arguments, so it's recommenced you run this under
-a Docker environment so you don't leak your actual server credentials (even better, have this as part of
-your CI).
+Trimming is currently being reworked, but here is the command that will be executable soon.
 
 ```bash
-php src/DatabaseJanitorCli.php --trim=true
+./database-janitor --host=localhost:8787 --username=real --trim=true real | gzip -c > output/real_test.sql.gz
 ```
