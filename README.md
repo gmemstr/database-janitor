@@ -59,7 +59,9 @@ By default Janitor output to STDOUT for piping.
 
 #### Trimming
 
-Trimming is currently being reworked, but here is the command that will be executable soon.
+Trimming allows much smaller database dumps by reducing the data exported. It does so by only keeping every fourth row,
+and allows you to completely scrub tables (e.g caches) to further reduce the size. Is as non destructive as possible,
+renaming the original table beforehand (and cleaning up afterwads).
 
 ```bash
 ./database-janitor --host=localhost:8787 --username=real --trim=true real | gzip -c > output/real_test.sql.gz
