@@ -128,9 +128,9 @@ class DatabaseJanitor {
    * @return array|bool
    *   FALSE if something goes wrong, otherwise array of removed items.
    */
-  public function trim($temp_sql_details) {
+  public function trim() {
     try {
-      $connection = new \PDO('mysql:host=' . $temp_sql_details->host . ';dbname=' . $temp_sql_details->database, $temp_sql_details->user, $temp_sql_details->password);
+      $connection = new \PDO('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
     }
     catch (\PDOException $e) {
       echo $e;
@@ -138,21 +138,38 @@ class DatabaseJanitor {
     }
     $ignore = [];
     foreach ($this->dumpOptions['trim_tables'] as $table) {
-      $ignore[] = $table;
-      $connection->exec("SELECT " . $table . " INTO janitor_" . $table);
-      $primary_key = $connection->query("SHOW KEYS FROM janitor_" . $table . " WHERE Key_name = 'PRIMARY'")->fetch()['Column_name'];
+      // Rename table and copy is over.
+      $connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
+      $ignore[] = 'original_' . $table;
+      $connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
+      // This makes assumptions about the primary key, should be configurable.
+      $primary_key = $connection->query("SHOW KEYS FROM original_" . $table . " WHERE Key_name = 'PRIMARY'")->fetch()['Column_name'];
       if ($primary_key) {
-        $all = $connection->query("SELECT " . $primary_key . " FROM janitor_" . $table)->fetchAll();
+        $all = $connection->query("SELECT " . $primary_key . " FROM " . $table)->fetchAll();
         foreach ($all as $key => $row) {
           // Delete every other row.
           if ($key % 4 == 0) {
             continue;
           }
-          $connection->exec("DELETE FROM janitor_" . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
+          $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
         }
       }
     }
     return $ignore;
   }
 
+  public function cleanup($tables) {
+    try {
+      $connection = new \PDO('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
+    }
+    catch (\PDOException $e) {
+      echo $e;
+      return FALSE;
+    }
+    foreach ($tables as $table) {
+      $table = explode('_', $table)[1];
+      $connection->exec("DROP TABLE " . $table);
+      $connection->exec("ALTER TABLE original_" . $table . " RENAME TO " .$table);
+    }
+  }
 }

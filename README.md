@@ -28,18 +28,15 @@ lando db-import sampledata.sql --host real_database; lando db-import sampledata.
 
 ```yaml
 sanitize_tables:
-  trim2:
-    - email
-    - gender
+# List of tables and their columns you want sanitized.
+  user:
+    - mail
 trim_tables:
-  - trim1
+# List of tables to be trimmed (every 4th row kept)
 excluded_tables:
-  - []
-trim_database:
-  host: 127.0.0.1:8788
-  user: trim
-  password: trim
-  database: trim
+# Tables to NOT dump
+scrub_tables:
+# Tables to dump sans content.
 ```
 
 ### CLI

@@ -88,6 +88,7 @@ class DatabaseJanitorCommand extends Command {
       if (!$dumpresult) {
         printf("Something went horribly wrong.");
       }
+      $this->janitor->cleanup($ignore_tables);
     }
   }
 
