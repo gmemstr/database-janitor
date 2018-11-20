@@ -47,7 +47,7 @@ class DatabaseJanitor {
    */
   public function dump($host = FALSE, $output = FALSE) {
     if (!$output) {
-      $output = getcwd() . '/output/' . $this->SqlHost . '_' . $this->SqlDatabase . '.sql.gz';
+      $output = 'php://stdout';
     }
 
     if ($host) {
@@ -59,7 +59,6 @@ class DatabaseJanitor {
 
     $dumpSettings = [
       'add-locks' => FALSE,
-      'compress' => 'Gzip',
       'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? [],
     ];
     try {
@@ -92,23 +91,25 @@ class DatabaseJanitor {
    *   New col value.
    */
   public function sanitize($table_name, $col_name, $col_value, $options) {
-    foreach ($options['tables'] as $table => $val) {
-      if ($table == $table_name) {
-        foreach ($options['tables']->{$table} as $col) {
-          if ($col == $col_name) {
-            // Generate value based on the type of the actual value.
-            // Helps avoid breakage with incorrect types in cols.
-            switch(gettype($col_value)) {
-              case "integer":
-              case "double":
-                return random_int(1000000, 9999999);
-                break;
-              case "string":
-                return (string) random_int(1000000, 9999999) . '-janitor';
-                break;
+    if (isset($options['tables'])) {
+      foreach ($options['tables'] as $table => $val) {
+        if ($table == $table_name) {
+          foreach ($options['tables']->{$table} as $col) {
+            if ($col == $col_name) {
+              // Generate value based on the type of the actual value.
+              // Helps avoid breakage with incorrect types in cols.
+              switch (gettype($col_value)) {
+                case "integer":
+                case "double":
+                  return random_int(1000000, 9999999);
+                  break;
+                case "string":
+                  return (string) random_int(1000000, 9999999) . '-janitor';
+                  break;
 
-              default:
-                return $col_value;
+                default:
+                  return $col_value;
+              }
             }
           }
         }

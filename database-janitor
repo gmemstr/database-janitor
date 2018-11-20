@@ -1,15 +1,16 @@
 #!/usr/bin/env php
 <?php
 
-
 use DatabaseJanitor\DatabaseJanitorCommand;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Yaml\Yaml;
 
 require __DIR__ . '/src/DatabaseJanitorCommand.php';
 require __DIR__ . '/vendor/autoload.php';
 
 $interface = new Application('database-janitor', '0.1 (alpha)');
-$command = new DatabaseJanitorCommand();
+$configuration = Yaml::parseFile('.janitor.yml');
+$command = new DatabaseJanitorCommand($configuration);
 $interface->add($command);
 $interface->setDefaultCommand($command->getName(), true);
 $interface->run();

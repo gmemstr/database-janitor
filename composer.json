@@ -18,7 +18,8 @@
     "minimum-stability": "dev",
     "require": {
         "ifsnop/mysqldump-php": "master",
-        "symfony/console": "^4.2@dev"
+        "symfony/console": "^4.2@dev",
+        "symfony/yaml": "^4.2@dev"
     },
     "scripts": {
         "db-janitor": "php src/gsimmer/database-janitor/DatabaseJanitorCli.php"
