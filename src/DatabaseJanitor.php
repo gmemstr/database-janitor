@@ -1,42 +1,33 @@
 <?php
 
-/**
- * @file Contains basic interface for DatabaseJanitor library.
- */
-
 namespace DatabaseJanitor;
+
 require getcwd() . '/vendor/autoload.php';
 
 use Ifsnop\Mysqldump as IMysqldump;
 
 /**
- * Class DatabaseJanitor
+ * Class DatabaseJanitor.
  *
  * @package DatabaseJanitor
  */
 class DatabaseJanitor {
 
-  // Should these be a single array?
-  private $SqlPassword;
-
-  private $SqlHost;
-
-  private $SqlUser;
-
-  private $SqlDatabase;
-
+  private $password;
+  private $host;
+  private $user;
+  private $database;
   private $dumpOptions;
-
 
   /**
    * DatabaseJanitor constructor.
    */
-  public function __construct($SqlDatabase, $SqlUser, $SqlHost, $SqlPassword, $dumpOptions) {
-    $this->SqlDatabase     = $SqlDatabase;
-    $this->SqlUser         = $SqlUser;
-    $this->SqlHost         = $SqlHost;
-    $this->SqlPassword     = $SqlPassword;
-    $this->dumpOptions     = $dumpOptions;
+  public function __construct($database, $user, $host, $password, $dumpOptions) {
+    $this->database    = $database;
+    $this->user        = $user;
+    $this->host        = $host;
+    $this->password    = $password;
+    $this->dumpOptions = $dumpOptions;
   }
 
   /**
@@ -51,10 +42,10 @@ class DatabaseJanitor {
     }
 
     if ($host) {
-      $this->SqlDatabase     = $host->database;
-      $this->SqlUser         = $host->user;
-      $this->SqlHost         = $host->host;
-      $this->SqlPassword     = $host->password;
+      $this->database = $host->database;
+      $this->user     = $host->user;
+      $this->host     = $host->host;
+      $this->password = $host->password;
     }
 
     $dumpSettings = [
@@ -62,7 +53,7 @@ class DatabaseJanitor {
       'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? [],
     ];
     try {
-      $dump = new IMysqldump\Mysqldump('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword, $dumpSettings);
+      $dump = new IMysqldump\Mysqldump('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, $dumpSettings);
       $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
         return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions);
       });
@@ -78,19 +69,19 @@ class DatabaseJanitor {
   /**
    * Replace values in specific table col with random value.
    *
-   * @param $table_name
+   * @param string $table_name
    *   The current table's name.
-   * @param $col_name
+   * @param string $col_name
    *   The current column name.
-   * @param $col_value
+   * @param string $col_value
    *   The current value in the column.
-   * @param $targets
-   *   Column names we want to sanitize.
+   * @param array $options
+   *   Full configuration of tables to sanitize.
    *
    * @return string
    *   New col value.
    */
-  public function sanitize($table_name, $col_name, $col_value, $options) {
+  public function sanitize($table_name, $col_name, $col_value, array $options) {
     if (isset($options['sanitize_tables'])) {
       foreach ($options['sanitize_tables'] as $table => $val) {
         if ($table == $table_name) {
@@ -102,10 +93,12 @@ class DatabaseJanitor {
                 case "integer":
                 case "double":
                   return random_int(1000000, 9999999);
-                  break;
+
+                break;
                 case "string":
                   return (string) random_int(1000000, 9999999) . '-janitor';
-                  break;
+
+                break;
 
                 default:
                   return $col_value;
@@ -127,7 +120,7 @@ class DatabaseJanitor {
    */
   public function trim() {
     try {
-      $connection = new \PDO('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
+      $connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
     }
     catch (\PDOException $e) {
       echo $e;
@@ -159,10 +152,11 @@ class DatabaseJanitor {
    * Completely scrub a table (aka truncate).
    *
    * @return array|bool
+   *   Scrubbed tables with original_ appended for cleanup, false on error.
    */
   public function scrub() {
     try {
-      $connection = new \PDO('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
+      $connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
     }
     catch (\PDOException $e) {
       echo $e;
@@ -183,13 +177,14 @@ class DatabaseJanitor {
    * Post-run to rename the original tables back.
    *
    * @param array $tables
-   *   Tables to rename, in the form original_X
+   *   Tables to rename, in the form original_X.
    *
    * @return bool
+   *   False if error occurred, true otherwise.
    */
-  public function cleanup($tables) {
+  public function cleanup(array $tables) {
     try {
-      $connection = new \PDO('mysql:host=' . $this->SqlHost . ';dbname=' . $this->SqlDatabase, $this->SqlUser, $this->SqlPassword);
+      $connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
     }
     catch (\PDOException $e) {
       echo $e;
@@ -203,7 +198,9 @@ class DatabaseJanitor {
       $table = implode('_', $table);
 
       $connection->exec("DROP TABLE " . $table);
-      $connection->exec("ALTER TABLE original_" . $table . " RENAME TO " .$table);
+      $connection->exec("ALTER TABLE original_" . $table . " RENAME TO " . $table);
     }
+    return TRUE;
   }
+
 }

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gsimmer
- * Date: 17/11/18
- * Time: 11:53 PM
- */
 
 namespace DatabaseJanitor;
 
@@ -17,7 +11,11 @@ use Symfony\Component\Console\Question\Question;
 
 require getcwd() . '/vendor/autoload.php';
 require 'DatabaseJanitor.php';
-
+/**
+ * Class DatabaseJanitorCommand.
+ *
+ * @package DatabaseJanitor
+ */
 class DatabaseJanitorCommand extends Command {
 
   private $host;
@@ -28,21 +26,30 @@ class DatabaseJanitorCommand extends Command {
 
   private $janitor;
 
+  /**
+   * DatabaseJanitorCommand constructor.
+   */
   public function __construct($configuration = array()) {
     parent::__construct();
     $this->configuration = $configuration;
   }
 
+  /**
+   * Configure Symfony Console command.
+   */
   protected function configure() {
     $this->setName('database-janitor')
       ->setDescription('Cleans up databases between servers or dev enviornments')
-      ->addOption('host', null, InputOption::VALUE_REQUIRED, 'Database host')
+      ->addOption('host', NULL, InputOption::VALUE_REQUIRED, 'Database host')
       ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'Database username')
       ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Database password')
-      ->addOption('trim','t', InputOption::VALUE_OPTIONAL, 'Whether or not to execute trimming', FALSE)
+      ->addOption('trim', 't', InputOption::VALUE_OPTIONAL, 'Whether or not to execute trimming', FALSE)
       ->addArgument('database', InputArgument::REQUIRED, 'Database to dump');
   }
 
+  /**
+   * Execute Database Janitor functions based on values passed.
+   */
   protected function execute(InputInterface $input, OutputInterface $output) {
 
     // Set up configuration.
@@ -55,8 +62,8 @@ class DatabaseJanitorCommand extends Command {
     }
     if (!$this->password = $input->getOption('password')) {
       $question = new Question('Enter database password for ' . $this->username . ': ');
-      $question->setHidden(true);
-      $question->setHiddenFallback(false);
+      $question->setHidden(TRUE);
+      $question->setHiddenFallback(FALSE);
       $this->password = $helper->ask($input, $output, $question);
     }
 
