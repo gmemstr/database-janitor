@@ -71,8 +71,6 @@ class DatabaseJanitorCommand extends Command {
       }
     }
 
-    // Optionally trim the database, requires the earlier dump to be loaded into
-    // the "trim database".
     else {
       $trimmed_tables = $this->janitor->trim();
       $scrubbed_tables = $this->janitor->scrub();
