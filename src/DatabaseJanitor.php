@@ -122,26 +122,30 @@ class DatabaseJanitor {
     try {
       $connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
     }
-    catch (\PDOException $e) {
+    catch (\Exception $e) {
       echo $e;
       return FALSE;
     }
     $ignore = [];
-    foreach ($this->dumpOptions['trim_tables'] as $table) {
-      // Rename table and copy is over.
-      $connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
-      $ignore[] = 'original_' . $table;
-      $connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
-      // This makes assumptions about the primary key, should be configurable.
-      $primary_key = $connection->query("SHOW KEYS FROM original_" . $table . " WHERE Key_name = 'PRIMARY'")->fetch()['Column_name'];
-      if ($primary_key) {
-        $all = $connection->query("SELECT " . $primary_key . " FROM " . $table)->fetchAll();
-        foreach ($all as $key => $row) {
-          // Delete every other row.
-          if ($key % 4 == 0) {
-            continue;
+    if ($this->dumpOptions['trim_tables']) {
+      foreach ($this->dumpOptions['trim_tables'] as $table) {
+        // Rename table and copy is over.
+        $connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
+        $ignore[] = 'original_' . $table;
+        $connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
+        // This makes assumptions about the primary key, should be configurable.
+        $primary_key = $connection->query("SHOW KEYS FROM original_" . $table . " WHERE Key_name = 'PRIMARY'")
+          ->fetch()['Column_name'];
+        if ($primary_key) {
+          $all = $connection->query("SELECT " . $primary_key . " FROM " . $table)
+            ->fetchAll();
+          foreach ($all as $key => $row) {
+            // Delete every other row.
+            if ($key % 4 == 0) {
+              continue;
+            }
+            $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
           }
-          $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
         }
       }
     }
