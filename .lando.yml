@@ -12,14 +12,6 @@ services:
       password: real
       database: real
 
-  trim_database:
-    type: mariadb
-    portforward: 8788
-    creds:
-      user: trim
-      password: trim
-      database: trim
-
 tooling:
   'db-import ':
     service: :host

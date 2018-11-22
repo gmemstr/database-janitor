@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 require __DIR__ . '/src/DatabaseJanitorCommand.php';
 require __DIR__ . '/vendor/autoload.php';
 
-$interface = new Application('database-janitor', '0.1 (alpha)');
+$interface = new Application('database-janitor', 'beta 2');
 $configuration = Yaml::parseFile('.janitor.yml');
 $command = new DatabaseJanitorCommand($configuration);
 $interface->add($command);
