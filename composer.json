@@ -1,27 +1,41 @@
 {
-    "name": "gsimmer/db-janitor",
-    "description": "Database cleanup and trimmer for Drupal",
-    "type": "library",
-    "license": "MPL-2.0",
-    "authors": [
-        {
-            "name": "Gabriel Simmer",
-            "email": "gsimmer@acromedia.com"
-        }
-    ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ifsnop/mysqldump-php"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "ifsnop/mysqldump-php": "master",
-        "symfony/console": "^4.2@dev",
-        "symfony/yaml": "^4.2@dev"
-    },
-    "scripts": {
-        "db-janitor": "php src/gsimmer/database-janitor/DatabaseJanitorCli.php"
+  "name": "gsimmer/database-janitor",
+  "description": "Database sanitizer, trimmer and scrubber.",
+  "type": "library",
+  "license": "MPL-2.0",
+  "authors": [
+    {
+      "name": "Gabriel Simmer",
+      "email": "gsimmer@acromedia.com"
     }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/ifsnop/mysqldump-php"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "ifsnop/mysqldump-php": "master",
+    "symfony/console": "^4.2@dev",
+    "symfony/yaml": "^4.2@dev"
+  },
+  "extra": {
+    "phar-builder": {
+      "compression": "GZip",
+      "name": "janitor.phar",
+      "output-dir": ".",
+      "entry-point": "./database-janitor",
+      "include": [],
+      "include-dev": false,
+      "events": {
+        "command.build.start": "git describe --tags > version.txt",
+        "command.build.end": [
+          "rm version.txt",
+          "chmod +x janitor.phar"
+        ]
+      }
+    }
+  }
 }
