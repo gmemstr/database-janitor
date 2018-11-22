@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7470af70be06763e9dfaa1fbe53286aa",
+    "content-hash": "2cf65ea78fbeb4073d99c64821164c66",
     "packages": [
         {
             "name": "ifsnop/mysqldump-php",
@@ -379,6 +379,43 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "drupal/coder",
+            "version": "8.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupal.org/project/coder.git",
+                "reference": "29a25627e7148b3119c84f18e087fc3b8c85b959"
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.4.0",
+                "squizlabs/php_codesniffer": "^3.0.1",
+                "symfony/yaml": ">=2.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.7 <6"
+            },
+            "type": "phpcodesniffer-standard",
+            "autoload": {
+                "psr-0": {
+                    "Drupal\\": "coder_sniffer/Drupal/",
+                    "DrupalPractice\\": "coder_sniffer/Drupal/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "description": "Coder is a library to review Drupal code.",
+            "homepage": "https://www.drupal.org/project/coder",
+            "keywords": [
+                "code review",
+                "phpcs",
+                "standards"
+            ],
+            "time": "2018-09-21T14:22:49+00:00"
+        },
         {
             "name": "hoa/consistency",
             "version": "dev-master",
@@ -1050,6 +1087,57 @@
                 "filesize"
             ],
             "time": "2014-04-04T18:06:18+00:00"
+        },
+        {
+            "name": "squizlabs/php_codesniffer",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
+                "reference": "74190ed7e105e0878b123e054c2530e8e0e95b51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/74190ed7e105e0878b123e054c2530e8e0e95b51",
+                "reference": "74190ed7e105e0878b123e054c2530e8e0e95b51",
+                "shasum": ""
+            },
+            "require": {
+                "ext-simplexml": "*",
+                "ext-tokenizer": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "bin": [
+                "bin/phpcs",
+                "bin/phpcbf"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Greg Sherwood",
+                    "role": "lead"
+                }
+            ],
+            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
+            "homepage": "http://www.squizlabs.com/php-codesniffer",
+            "keywords": [
+                "phpcs",
+                "standards"
+            ],
+            "time": "2018-11-21T04:20:47+00:00"
         },
         {
             "name": "symfony/finder",

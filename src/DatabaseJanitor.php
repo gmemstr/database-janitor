@@ -4,7 +4,7 @@ namespace DatabaseJanitor;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Ifsnop\Mysqldump as IMysqldump;
+use Ifsnop\Mysqldump\Mysqldump;
 
 /**
  * Class DatabaseJanitor.
@@ -32,7 +32,7 @@ class DatabaseJanitor {
     $this->dumpOptions = $dumpOptions;
     try {
       $this->connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, array(
-        \PDO::ATTR_PERSISTENT => true
+        \PDO::ATTR_PERSISTENT => TRUE
       ));
     }
     catch (\Exception $e) {
@@ -63,7 +63,7 @@ class DatabaseJanitor {
       'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? [],
     ];
     try {
-      $dump = new IMysqldump\Mysqldump('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, $dumpSettings);
+      $dump = new Mysqldump('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, $dumpSettings);
       $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
         return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions);
       });
