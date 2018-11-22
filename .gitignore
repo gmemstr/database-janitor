@@ -2,3 +2,4 @@ vendor/
 .idea
 output/
 .janitor.yml
+janitor.phar

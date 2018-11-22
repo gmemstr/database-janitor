@@ -2,7 +2,7 @@
 
 namespace DatabaseJanitor;
 
-require getcwd() . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Ifsnop\Mysqldump as IMysqldump;
 

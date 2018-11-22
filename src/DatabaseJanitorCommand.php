@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
-require getcwd() . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 require 'DatabaseJanitor.php';
 /**
  * Class DatabaseJanitorCommand.

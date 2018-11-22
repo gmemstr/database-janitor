@@ -21,21 +21,27 @@
     "symfony/console": "^4.2@dev",
     "symfony/yaml": "^4.2@dev"
   },
+  "scripts": {
+    "build": "vendor/bin/phar-builder package composer.json"
+  },
   "extra": {
     "phar-builder": {
       "compression": "GZip",
       "name": "janitor.phar",
-      "output-dir": ".",
+      "output-dir": "build",
       "entry-point": "./database-janitor",
-      "include": [],
+      "include": ["src"],
       "include-dev": false,
       "events": {
-        "command.build.start": "git describe --tags > version.txt",
+        "command.build.start": "git describe --tags > build/version.txt",
         "command.build.end": [
-          "rm version.txt",
-          "chmod +x janitor.phar"
+          "rm build/version.txt",
+          "chmod +x build/janitor.phar"
         ]
       }
     }
+  },
+  "require-dev": {
+    "macfja/phar-builder": "dev-master"
   }
 }
