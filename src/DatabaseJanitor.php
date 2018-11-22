@@ -19,6 +19,8 @@ class DatabaseJanitor {
   private $database;
   private $dumpOptions;
 
+  private $connection;
+
   /**
    * DatabaseJanitor constructor.
    */
@@ -28,6 +30,14 @@ class DatabaseJanitor {
     $this->host        = $host;
     $this->password    = $password;
     $this->dumpOptions = $dumpOptions;
+    try {
+      $this->connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, array(
+        \PDO::ATTR_PERSISTENT => true
+      ));
+    }
+    catch (\Exception $e) {
+      echo $e;
+    }
   }
 
   /**
@@ -119,32 +129,29 @@ class DatabaseJanitor {
    *   FALSE if something goes wrong, otherwise array of removed items.
    */
   public function trim() {
-    try {
-      $connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
-    }
-    catch (\Exception $e) {
-      echo $e;
-      return FALSE;
-    }
     $ignore = [];
     if ($this->dumpOptions['trim_tables']) {
       foreach ($this->dumpOptions['trim_tables'] as $table) {
+        // Skip table if not found.
+        if (!$this->connection->query("SELECT 1 FROM " . $table . " LIMIT 1;")) {
+          continue;
+        }
         // Rename table and copy is over.
-        $connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
+        $this->connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
         $ignore[] = 'original_' . $table;
-        $connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
+        $this->connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
         // This makes assumptions about the primary key, should be configurable.
-        $primary_key = $connection->query("SHOW KEYS FROM original_" . $table . " WHERE Key_name = 'PRIMARY'")
+        $primary_key = $this->connection->query("SHOW KEYS FROM original_" . $table . " WHERE Key_name = 'PRIMARY'")
           ->fetch()['Column_name'];
         if ($primary_key) {
-          $all = $connection->query("SELECT " . $primary_key . " FROM " . $table)
+          $all = $this->connection->query("SELECT " . $primary_key . " FROM " . $table)
             ->fetchAll();
           foreach ($all as $key => $row) {
             // Delete every other row.
             if ($key % 4 == 0) {
               continue;
             }
-            $connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
+            $this->connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
           }
         }
       }
@@ -159,20 +166,17 @@ class DatabaseJanitor {
    *   Scrubbed tables with original_ appended for cleanup, false on error.
    */
   public function scrub() {
-    try {
-      $connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
-    }
-    catch (\PDOException $e) {
-      echo $e;
-      return FALSE;
-    }
     $ignore = [];
     foreach ($this->dumpOptions['scrub_tables'] as $table) {
+      // Skip table if not found.
+      if (!$this->connection->query("SELECT 1 FROM " . $table . " LIMIT 1;")) {
+        continue;
+      }
       // Rename table and copy is over.
-      $connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
+      $this->connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
       $ignore[] = 'original_' . $table;
-      $connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
-      $connection->exec("TRUNCATE " . $table);
+      $this->connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
+      $this->connection->exec("TRUNCATE " . $table);
     }
     return $ignore;
   }
@@ -187,13 +191,6 @@ class DatabaseJanitor {
    *   False if error occurred, true otherwise.
    */
   public function cleanup(array $tables) {
-    try {
-      $connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password);
-    }
-    catch (\PDOException $e) {
-      echo $e;
-      return FALSE;
-    }
     foreach ($tables as $table) {
       // Bit of a funky replace, but make sure we DO NOT alter the original
       // table name.
@@ -201,8 +198,8 @@ class DatabaseJanitor {
       unset($table[0]);
       $table = implode('_', $table);
 
-      $connection->exec("DROP TABLE " . $table);
-      $connection->exec("ALTER TABLE original_" . $table . " RENAME TO " . $table);
+      $this->connection->exec("DROP TABLE " . $table);
+      $this->connection->exec("ALTER TABLE original_" . $table . " RENAME TO " . $table);
     }
     return TRUE;
   }

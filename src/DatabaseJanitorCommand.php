@@ -43,7 +43,7 @@ class DatabaseJanitorCommand extends Command {
       ->addOption('host', NULL, InputOption::VALUE_REQUIRED, 'Database host')
       ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'Database username')
       ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Database password')
-      ->addOption('trim', 't', InputOption::VALUE_OPTIONAL, 'Whether or not to execute trimming', FALSE)
+      ->addOption('trim', 't', InputOption::VALUE_NONE, 'Whether or not to execute trimming')
       ->addArgument('database', InputArgument::REQUIRED, 'Database to dump');
   }
 
