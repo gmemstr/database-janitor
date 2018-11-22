@@ -1,0 +1,10 @@
+language: php
+php:
+  - 7.2
+install:
+  - sudo apt install php-bcmath
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - composer install
+  - composer global require "squizlabs/php_codesniffer=*"
+  - composer global require drush/drush:6.*
+script: phpcs -n --standard=Drupal src
