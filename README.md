@@ -34,10 +34,15 @@ sanitize_tables:
     - mail
 trim_tables:
 # List of tables to be trimmed (every 4th row kept)
+  - trim_table
 excluded_tables:
 # Tables to NOT dump
+  - ignore_table
+  - ignore_table2
 scrub_tables:
 # Tables to dump sans content.
+  - table1
+  - table2
 ```
 
 ### CLI
