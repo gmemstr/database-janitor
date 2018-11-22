@@ -1,4 +1,4 @@
-Database Janitor
+Database Janitor [![Build Status](https://travis-ci.org/gmemstr/database-janitor.svg?branch=master)](https://travis-ci.org/gmemstr/database-janitor)
 ---
 
 Highly-configurable database dumper
@@ -50,7 +50,7 @@ scrub_tables:
 First you'll want to copy `.janitor.example.yml` to `.janitor.yml`. You can then go in and edit exactly which tables and
 columns you want sanitized/ignored/cleared.
 
-Then install dependencies with `composer install`.
+If not using the .phar, install dependencies with `composer install`.
 
 #### Dumping
 
@@ -59,7 +59,7 @@ This will prompt you for the database password, then produce a gzip'd .sql file 
 By default Janitor output to STDOUT for piping.
 
 ```bash
-./database-janitor --host=localhost:8787 --username=real real | gzip -c > output/real_test.sql.gz
+./janitor.phar --host=localhost:8787 --username=real real | gzip -c > output/real_test.sql.gz
 ```
 
 #### Trimming
@@ -68,5 +68,5 @@ Trimming allows much smaller database dumps by reducing the data exported. It do
 and allows you to completely scrub tables (e.g caches) to further reduce the size. Is as non destructive as possible - it first renames the original database, copies the contents to a dummy database, dumps, then deletes the dummy database and renames the original back.
 
 ```bash
-./database-janitor --host=localhost:8787 --username=real --trim=true real | gzip -c > output/real_test.sql.gz
+./janitor.phar --host=localhost:8787 --username=real --trim=true real | gzip -c > output/real_test.sql.gz
 ```
