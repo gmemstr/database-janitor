@@ -68,5 +68,5 @@ Trimming allows much smaller database dumps by reducing the data exported. It do
 and allows you to completely scrub tables (e.g caches) to further reduce the size. Is as non destructive as possible - it first renames the original database, copies the contents to a dummy database, dumps, then deletes the dummy database and renames the original back.
 
 ```bash
-./janitor.phar --host=localhost:8787 --username=real --trim=true real | gzip -c > output/real_test.sql.gz
+./janitor.phar --host=localhost:8787 --username=real --trim real | gzip -c > output/real_test.sql.gz
 ```
