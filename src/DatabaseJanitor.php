@@ -139,20 +139,21 @@ class DatabaseJanitor {
         // Rename table and copy is over.
         $this->connection->exec("ALTER TABLE " . $table . " RENAME TO original_" . $table);
         $ignore[] = 'original_' . $table;
-        $this->connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table);
         // This makes assumptions about the primary key, should be configurable.
         $primary_key = $this->connection->query("SHOW KEYS FROM original_" . $table . " WHERE Key_name = 'PRIMARY'")
           ->fetch()['Column_name'];
         if ($primary_key) {
+          $keep = array();
           $all = $this->connection->query("SELECT " . $primary_key . " FROM " . $table)
             ->fetchAll();
           foreach ($all as $key => $row) {
             // Delete every other row.
             if ($key % 4 == 0) {
-              continue;
+              $keep[] = $row[$primary_key];
             }
-            $this->connection->exec("DELETE FROM " . $table . " WHERE " . $primary_key . "=" . $row[$primary_key]);
           }
+          $keep = implode(',', $keep);
+          $this->connection->exec("CREATE TABLE " . $table . " SELECT * FROM original_" . $table . 'WHERE ' . $key . ' IN (' . $keep . ')');
         }
       }
     }
