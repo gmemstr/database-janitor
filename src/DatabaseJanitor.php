@@ -89,7 +89,7 @@ class DatabaseJanitor {
    *   The current column name.
    * @param string $col_value
    *   The current value in the column.
-   * @param array  $options
+   * @param array $options
    *   Full configuration of tables to sanitize.
    *
    * @return string
@@ -108,11 +108,8 @@ class DatabaseJanitor {
                 case 'double':
                   return random_int(1000000, 9999999);
 
-                  break;
                 case 'string':
                   return (string) random_int(1000000, 9999999) . '-janitor';
-
-                  break;
 
                 default:
                   return $col_value;
@@ -144,7 +141,7 @@ class DatabaseJanitor {
         $this->connection->exec('ALTER TABLE ' . $table . ' RENAME TO original_' . $table);
         $ignore[] = 'original_' . $table;
         // This makes assumptions about the primary key, should be configurable.
-        $primary_key = $this->get_primary_key($table);
+        $primary_key = $this->getPrimaryKey($table);
         if ($primary_key) {
           $keep = [];
           if (isset($this->dumpOptions['keep_rows'][$table])) {
@@ -188,7 +185,7 @@ class DatabaseJanitor {
       $ignore[] = 'original_' . $table;
       $this->connection->exec('CREATE TABLE ' . $table . ' LIKE original_' . $table);
       if ($keep_rows) {
-        $primary_key = $this->get_primary_key($table);
+        $primary_key = $this->getPrimaryKey($table);
         if ($primary_key) {
           $this->connection->exec('INSERT INTO ' . $table . ' SELECT * FROM original_' . $table . ' WHERE ' . $primary_key . ' IN (' . $keep_rows . ')');
         }
@@ -206,8 +203,7 @@ class DatabaseJanitor {
    * @return bool
    *   False if error occurred, true otherwise.
    */
-  public
-  function cleanup(array $tables) {
+  public function cleanup(array $tables) {
     foreach ($tables as $table) {
       // Bit of a funky replace, but make sure we DO NOT alter the original
       // table name.
@@ -221,11 +217,20 @@ class DatabaseJanitor {
     return TRUE;
   }
 
-  private function get_primary_key($table) {
+  /**
+   * Returns primary key of table, if available.
+   *
+   * @param string $table
+   *   Table name.
+   *
+   * @return mixed
+   *   Primary key name.
+   */
+  private function getPrimaryKey($table) {
     $primary_key = $this->connection->query("SHOW KEYS FROM original_" . $table . " WHERE Key_name = 'PRIMARY'")
-    ->fetch()['Column_name'];
+      ->fetch()['Column_name'];
 
-      return $primary_key;
-    }
+    return $primary_key;
+  }
 
 }
