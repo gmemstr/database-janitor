@@ -5,7 +5,6 @@ Highly-configurable database dumper
 
 ## Features
 
- - First-party support for Drupal databases
  - Configuration-first
  - PHP with minimal dependencies
 
@@ -27,17 +26,23 @@ lando db-import sampledata.sql --host real_database
 ### Configuration
 
 ```yaml
-# .janitor.yml
 sanitize_tables:
-# List of tables and their columns you want sanitized.
+  # List of tables and their columns you want sanitized.
   user:
-    - mail
+  - mail
 trim_tables:
 # List of tables to be trimmed (every 4th row kept)
+  - trim1
 excluded_tables:
 # Tables to NOT dump
+  - exclude1
 scrub_tables:
 # Tables to dump sans content.
+  - scrub1
+keep_rows:
+  # Specific rows from tables to keep, by primary ID.
+  table:
+    - 1
 ```
 
 ### CLI
