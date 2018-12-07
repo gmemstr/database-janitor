@@ -4,24 +4,16 @@ config:
   webroot: .
 
 services:
-  real_database:
+  database:
     type: mariadb
     portforward: 8787
     creds:
-      user: real
-      password: real
-      database: real
+      user: database
+      password: database
+      database: database
 
 tooling:
   'db-import ':
-    service: :host
-    description: Import  into database
+    service: database
+    description: Import into database
     cmd: /helpers/sql-import.sh
-    options:
-      host:
-        description: The database service to use
-        default: database
-        alias:
-        - h
-      no-wipe:
-        description: Do not destroy the existing database before an import

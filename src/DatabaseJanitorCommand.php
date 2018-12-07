@@ -44,6 +44,7 @@ class DatabaseJanitorCommand extends Command {
       ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'Database username')
       ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Database password')
       ->addOption('trim', 't', InputOption::VALUE_NONE, 'Whether or not to execute trimming')
+      ->addOption('drupal', 'd', InputOption::VALUE_REQUIRED, 'Path to a Drupal settings file (ignores -u and -p options)')
       ->addArgument('database', InputArgument::REQUIRED, 'Database to dump');
   }
 
@@ -56,15 +57,28 @@ class DatabaseJanitorCommand extends Command {
     $helper = $this->getHelper('question');
     $this->host = $input->getOption('host');
     $this->database = $input->getArgument('database');
-    if (!$this->username = $input->getOption('username')) {
-      $question = new Question('Enter database user: ');
-      $this->username = $helper->ask($input, $output, $question);
+    if (!$input->getOption('drupal')) {
+      if (!$this->username = $input->getOption('username')) {
+        $question = new Question('Enter database user: ');
+        $this->username = $helper->ask($input, $output, $question);
+      }
+      if (!$this->password = $input->getOption('password') && !$input->getOption('drupal')) {
+        $question = new Question('Enter database password for ' . $this->username . ': ');
+        $question->setHidden(TRUE);
+        $question->setHiddenFallback(FALSE);
+        $this->password = $helper->ask($input, $output, $question);
+      }
     }
-    if (!$this->password = $input->getOption('password')) {
-      $question = new Question('Enter database password for ' . $this->username . ': ');
-      $question->setHidden(TRUE);
-      $question->setHiddenFallback(FALSE);
-      $this->password = $helper->ask($input, $output, $question);
+    else {
+      // Try to load drupal configuration file specified, assuming database is
+      // "default" until I hear otherwise.
+      require_once $input->getOption('drupal');
+      if ($databases['default'] && is_array($databases['default'])) {
+        $db_array = $databases['default']['default'];
+        $this->host = $db_array['host'];
+        $this->username = $db_array['username'];
+        $this->password = $db_array['password'];
+      }
     }
 
     $this->janitor = new DatabaseJanitor(
