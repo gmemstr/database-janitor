@@ -44,7 +44,7 @@ class DatabaseJanitorCommand extends Command {
       ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'Database username')
       ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Database password')
       ->addOption('trim', 't', InputOption::VALUE_NONE, 'Whether or not to execute trimming')
-      ->addOption('drupal', 'd', InputOption::VALUE_REQUIRED, 'Whether to read from a Drupal settings file (and where)')
+      ->addOption('drupal', 'd', InputOption::VALUE_REQUIRED, 'Path to a Drupal settings file (ignores -u and -p options)')
       ->addArgument('database', InputArgument::REQUIRED, 'Database to dump');
   }
 

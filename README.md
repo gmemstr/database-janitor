@@ -5,6 +5,7 @@ Highly-configurable database dumper
 
 ## Features
 
+ - Drupal configuration support
  - Configuration-first
  - PHP with minimal dependencies
 
@@ -12,6 +13,33 @@ Highly-configurable database dumper
 
 This application can either be used as a CLI app or a library that other applications can build on top of, e.g a drush
 command or another custom application.
+
+## Command Help
+
+```bash
+Description:
+  Cleans up databases between servers or dev enviornments
+
+Usage:
+  database-janitor [options] [--] <database>
+
+Arguments:
+  database                   Database to dump
+
+Options:
+      --host=HOST            Database host
+  -u, --username[=USERNAME]  Database username
+  -p, --password[=PASSWORD]  Database password
+  -t, --trim                 Whether or not to execute trimming
+  -d, --drupal=DRUPAL        Path to a Drupal settings file (ignores -u and -p options)
+  -h, --help                 Display this help message
+  -q, --quiet                Do not output any message
+  -V, --version              Display this application version
+      --ansi                 Force ANSI output
+      --no-ansi              Disable ANSI output
+  -n, --no-interaction       Do not ask any interactive question
+  -v|vv|vvv, --verbose       Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+```
 
 ### Testing
 
