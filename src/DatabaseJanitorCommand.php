@@ -62,7 +62,7 @@ class DatabaseJanitorCommand extends Command {
         $question = new Question('Enter database user: ');
         $this->username = $helper->ask($input, $output, $question);
       }
-      if (!$this->password = $input->getOption('password') && !$input->getOption('drupal')) {
+      if (!$this->password = $input->getOption('password')) {
         $question = new Question('Enter database password for ' . $this->username . ': ');
         $question->setHidden(TRUE);
         $question->setHiddenFallback(FALSE);
