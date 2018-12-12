@@ -4,7 +4,14 @@ sanitize_tables:
   - mail
 trim_tables:
 # List of tables to be trimmed (every 4th row kept)
+  - trim1
 excluded_tables:
 # Tables to NOT dump
+  - exclude1
 scrub_tables:
 # Tables to dump sans content.
+  - scrub1
+keep_rows:
+  # Specific rows from tables to keep, by primary ID.
+  table:
+    - 1
