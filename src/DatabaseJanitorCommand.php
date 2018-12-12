@@ -52,7 +52,6 @@ class DatabaseJanitorCommand extends Command {
    * Execute Database Janitor functions based on values passed.
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-
     // Set up configuration.
     $helper = $this->getHelper('question');
     $this->host = $input->getOption('host');
@@ -74,6 +73,7 @@ class DatabaseJanitorCommand extends Command {
       // "default" until I hear otherwise.
       require_once $input->getOption('drupal');
       if ($databases['default'] && is_array($databases['default'])) {
+      fwrite(STDERR, "Loading Drupal configuration. \n");
         $db_array = $databases['default']['default'];
         $this->host = $db_array['host'];
         $this->username = $db_array['username'];
@@ -86,6 +86,7 @@ class DatabaseJanitorCommand extends Command {
     );
 
     if (!$input->getOption('trim')) {
+      fwrite(STDERR, "Dumping database. \n");
       $dumpresult = $this->janitor->dump();
       if (!$dumpresult) {
         $output->writeln("Something went horribly wrong.");
@@ -93,6 +94,7 @@ class DatabaseJanitorCommand extends Command {
     }
 
     else {
+      fwrite(STDERR, "Trimming and scrubbing tables \n");
       $trimmed_tables = $this->janitor->trim();
       $scrubbed_tables = $this->janitor->scrub();
       $ignore_tables = array_merge($trimmed_tables, $scrubbed_tables);
@@ -104,7 +106,7 @@ class DatabaseJanitorCommand extends Command {
       $this->janitor = new DatabaseJanitor(
         $this->database, $this->username, $this->host, $this->password, $this->configuration
       );
-
+      fwrite(STDERR, "Dumping database.\n");
       $dumpresult = $this->janitor->dump();
       if (!$dumpresult) {
         printf("Something went horribly wrong.");
