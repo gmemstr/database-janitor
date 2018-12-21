@@ -4,6 +4,8 @@ config:
   webroot: .
 
 services:
+  php:
+    type: php
   database:
     type: mariadb
     portforward: 8787

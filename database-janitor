@@ -10,6 +10,11 @@ require __DIR__ . '/vendor/autoload.php';
 
 $interface = new Application('database-janitor', 'beta 2');
 $configuration = Yaml::parseFile('.janitor.yml');
+// Allow ability to "include" other configuration files.
+if (isset($configuration['include'])) {
+  $configuration2 = Yaml::parseFile($configuration['include']);
+  $configuration = array_merge($configuration, $configuration2);
+}
 $command = new DatabaseJanitorCommand($configuration);
 $interface->add($command);
 $interface->setDefaultCommand($command->getName(), true);

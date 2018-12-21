@@ -95,7 +95,7 @@ class DatabaseJanitor {
    * @return string
    *   New col value.
    */
-  public function sanitize($table_name, $col_name, $col_value, array $options) {
+  public function sanitize($table_name, $col_name, $col_value, $options) {
     if (isset($options['sanitize_tables'])) {
       foreach ($options['sanitize_tables'] as $table => $val) {
         if ($table == $table_name) {
