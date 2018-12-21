@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2cf65ea78fbeb4073d99c64821164c66",
+    "content-hash": "299be4143ddeec4fe0c0b808f4dba9e4",
     "packages": [
         {
             "name": "ifsnop/mysqldump-php",
-            "version": "dev-master",
+            "version": "dev-table-name-hook",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ifsnop/mysqldump-php.git",
-                "reference": "4de8e01cbcb0feab824b8f0b691f352484e10520"
+                "url": "https://github.com/gmemstr/mysqldump-php.git",
+                "reference": "4f7e6440f7c9acaeed043ee9791a9c3c62e9f961"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ifsnop/mysqldump-php/zipball/4de8e01cbcb0feab824b8f0b691f352484e10520",
-                "reference": "4de8e01cbcb0feab824b8f0b691f352484e10520",
+                "url": "https://api.github.com/repos/gmemstr/mysqldump-php/zipball/4f7e6440f7c9acaeed043ee9791a9c3c62e9f961",
+                "reference": "4f7e6440f7c9acaeed043ee9791a9c3c62e9f961",
                 "shasum": ""
             },
             "require": {
@@ -58,10 +58,9 @@
                 "sql"
             ],
             "support": {
-                "source": "https://github.com/ifsnop/mysqldump-php/tree/master",
-                "issues": "https://github.com/ifsnop/mysqldump-php/issues"
+                "source": "https://github.com/gmemstr/mysqldump-php/tree/table-name-hook"
             },
-            "time": "2018-12-01T00:03:05+00:00"
+            "time": "2018-12-21T22:14:00+00:00"
         },
         {
             "name": "symfony/console",
@@ -69,12 +68,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "d1cea0b804f5f5e76c2ea272dbe7b6d731b748a2"
+                "reference": "3f8a62ad1763ab3a43b1e30d90a6f443bab15fa5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/d1cea0b804f5f5e76c2ea272dbe7b6d731b748a2",
-                "reference": "d1cea0b804f5f5e76c2ea272dbe7b6d731b748a2",
+                "url": "https://api.github.com/repos/symfony/console/zipball/3f8a62ad1763ab3a43b1e30d90a6f443bab15fa5",
+                "reference": "3f8a62ad1763ab3a43b1e30d90a6f443bab15fa5",
                 "shasum": ""
             },
             "require": {
@@ -130,7 +129,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-12-10T03:47:54+00:00"
+            "time": "2018-12-17T13:51:43+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -323,12 +322,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "d4fc8a5d43d55a89c6baa856215ec39108fc33a0"
+                "reference": "3a51c82e368190e2c829926bf7b512ac6902a853"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/d4fc8a5d43d55a89c6baa856215ec39108fc33a0",
-                "reference": "d4fc8a5d43d55a89c6baa856215ec39108fc33a0",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/3a51c82e368190e2c829926bf7b512ac6902a853",
+                "reference": "3a51c82e368190e2c829926bf7b512ac6902a853",
                 "shasum": ""
             },
             "require": {
@@ -374,7 +373,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-26T16:19:01+00:00"
+            "time": "2018-12-13T12:43:21+00:00"
         }
     ],
     "packages-dev": [
@@ -1093,12 +1092,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "b98fbeb0b206d220f540d1df62dbec2c448e1116"
+                "reference": "390bffe2265aac8184fdf86400c0d0841e65bc4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/b98fbeb0b206d220f540d1df62dbec2c448e1116",
-                "reference": "b98fbeb0b206d220f540d1df62dbec2c448e1116",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/390bffe2265aac8184fdf86400c0d0841e65bc4b",
+                "reference": "390bffe2265aac8184fdf86400c0d0841e65bc4b",
                 "shasum": ""
             },
             "require": {
@@ -1136,7 +1135,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-12-11T05:00:48+00:00"
+            "time": "2018-12-21T04:12:30+00:00"
         },
         {
             "name": "symfony/finder",
@@ -1144,12 +1143,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "047be7e3450e5460f14c4a42a02c9811e2eda2cd"
+                "reference": "d2bae4531a8d48ee610ec664d10336c9500e3a64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/047be7e3450e5460f14c4a42a02c9811e2eda2cd",
-                "reference": "047be7e3450e5460f14c4a42a02c9811e2eda2cd",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/d2bae4531a8d48ee610ec664d10336c9500e3a64",
+                "reference": "d2bae4531a8d48ee610ec664d10336c9500e3a64",
                 "shasum": ""
             },
             "require": {
@@ -1185,7 +1184,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-26T16:19:01+00:00"
+            "time": "2018-12-13T12:43:21+00:00"
         },
         {
             "name": "symfony/process",
@@ -1193,12 +1192,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "1a01d2984ed07841fe3db2da69743f9b2ee14de7"
+                "reference": "d87c6f01ac6dfc4af25c0f4fb7eeecdc03927615"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/1a01d2984ed07841fe3db2da69743f9b2ee14de7",
-                "reference": "1a01d2984ed07841fe3db2da69743f9b2ee14de7",
+                "url": "https://api.github.com/repos/symfony/process/zipball/d87c6f01ac6dfc4af25c0f4fb7eeecdc03927615",
+                "reference": "d87c6f01ac6dfc4af25c0f4fb7eeecdc03927615",
                 "shasum": ""
             },
             "require": {
@@ -1234,7 +1233,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-26T16:19:01+00:00"
+            "time": "2018-12-13T12:43:21+00:00"
         },
         {
             "name": "webignition/readable-duration",
@@ -1283,6 +1282,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "ifsnop/mysqldump-php": 20,
         "symfony/console": 20,
         "symfony/yaml": 20,
         "macfja/phar-builder": 20

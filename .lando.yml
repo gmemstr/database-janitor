@@ -6,6 +6,7 @@ config:
 services:
   php:
     type: php
+    xdebug: true
   database:
     type: mariadb
     portforward: 8787

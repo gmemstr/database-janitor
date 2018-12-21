@@ -96,12 +96,11 @@ class DatabaseJanitorCommand extends Command {
     else {
       fwrite(STDERR, "Trimming and scrubbing tables \n");
       $trimmed_tables = $this->janitor->trim();
-      $scrubbed_tables = $this->janitor->scrub();
-      $ignore_tables = array_merge($trimmed_tables, $scrubbed_tables);
 
-      foreach ($ignore_tables as $ignore_table) {
+      foreach ($trimmed_tables as $ignore_table) {
         $this->configuration['excluded_tables'][] = $ignore_table;
       }
+      $this->configuration['no-data'] = $this->configuration['scrub_tables'];
       // Reload configuration with new ignore tables.
       $this->janitor = new DatabaseJanitor(
         $this->database, $this->username, $this->host, $this->password, $this->configuration
@@ -111,7 +110,7 @@ class DatabaseJanitorCommand extends Command {
       if (!$dumpresult) {
         printf("Something went horribly wrong.");
       }
-      $this->janitor->cleanup($ignore_tables);
+      $this->janitor->cleanup($trimmed_tables);
     }
   }
 
