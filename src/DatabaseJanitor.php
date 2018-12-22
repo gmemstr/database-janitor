@@ -29,10 +29,10 @@ class DatabaseJanitor {
    * DatabaseJanitor constructor.
    */
   public function __construct($database, $user, $host, $password, $dumpOptions) {
-    $this->database    = $database;
-    $this->user        = $user;
-    $this->host        = $host;
-    $this->password    = $password;
+    $this->database = $database;
+    $this->user = $user;
+    $this->host = $host;
+    $this->password = $password;
     $this->dumpOptions = $dumpOptions;
     try {
       $this->connection = new \PDO('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, [
@@ -57,22 +57,22 @@ class DatabaseJanitor {
 
     if ($host) {
       $this->database = $host->database;
-      $this->user     = $host->user;
-      $this->host     = $host->host;
+      $this->user = $host->user;
+      $this->host = $host->host;
       $this->password = $host->password;
     }
 
     $dumpSettings = [
-      'add-locks'      => FALSE,
+      'add-locks' => FALSE,
       'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? [],
       'no-data' => $this->dumpOptions['no-data'] ?? [],
     ];
     try {
       $dump = new Mysqldump('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, $dumpSettings);
       if ($trim) {
-          $dump->setTransformTableNameHook(function ($table_name, $reset) {
-              return $this->rename_table($table_name, $reset);
-          });
+        $dump->setTransformTableNameHook(function ($table_name, $reset) {
+          return $this->renameTable($table_name, $reset);
+        });
       }
       $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
         return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions);
@@ -101,7 +101,7 @@ class DatabaseJanitor {
    * @return string
    *   New col value.
    */
-  public function sanitize($table_name, $col_name, $col_value, $options) {
+  public function sanitize($table_name, $col_name, $col_value, array $options) {
     if (isset($options['sanitize_tables'])) {
       foreach ($options['sanitize_tables'] as $table => $val) {
         if ($table == $table_name) {
@@ -201,7 +201,18 @@ class DatabaseJanitor {
     return $primary_key;
   }
 
-  public function rename_table($table_name, $reset) {
+  /**
+   * Rename table function hook to manipulate during dump.
+   *
+   * @param string $table_name
+   *   Current table name.
+   * @param bool $reset
+   *   Whether to reset table name back to original (if altered was passed).
+   *
+   * @return string
+   *   Returns the altered table name.
+   */
+  public function renameTable($table_name, $reset) {
     if (in_array($table_name, $this->dumpOptions['trim_tables'])) {
       return 'janitor_' . $table_name;
     }
@@ -210,4 +221,5 @@ class DatabaseJanitor {
     }
     return $table_name;
   }
+
 }

@@ -11,6 +11,7 @@ use Symfony\Component\Console\Question\Question;
 
 require __DIR__ . '/../vendor/autoload.php';
 require 'DatabaseJanitor.php';
+
 /**
  * Class DatabaseJanitorCommand.
  *
@@ -19,9 +20,13 @@ require 'DatabaseJanitor.php';
 class DatabaseJanitorCommand extends Command {
 
   private $host;
+
   private $username;
+
   private $password;
+
   private $database;
+
   private $configuration;
 
   private $janitor;
@@ -73,7 +78,7 @@ class DatabaseJanitorCommand extends Command {
       // "default" until I hear otherwise.
       require_once $input->getOption('drupal');
       if ($databases['default'] && is_array($databases['default'])) {
-      fwrite(STDERR, "Loading Drupal configuration. \n");
+        fwrite(STDERR, "Loading Drupal configuration. \n");
         $db_array = $databases['default']['default'];
         $this->host = $db_array['host'];
         $this->username = $db_array['username'];
@@ -87,7 +92,7 @@ class DatabaseJanitorCommand extends Command {
 
     if (!$input->getOption('trim')) {
       fwrite(STDERR, "Dumping database. \n");
-      $dumpresult = $this->janitor->dump(null, null, FALSE);
+      $dumpresult = $this->janitor->dump(NULL, NULL, FALSE);
       if (!$dumpresult) {
         $output->writeln("Something went horribly wrong.");
       }
@@ -106,7 +111,7 @@ class DatabaseJanitorCommand extends Command {
         $this->database, $this->username, $this->host, $this->password, $this->configuration
       );
       fwrite(STDERR, "Dumping database.\n");
-      $dumpresult = $this->janitor->dump(null, null, TRUE);
+      $dumpresult = $this->janitor->dump(NULL, NULL, TRUE);
       if (!$dumpresult) {
         printf("Something went horribly wrong.");
       }
