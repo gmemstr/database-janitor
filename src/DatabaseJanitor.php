@@ -50,7 +50,7 @@ class DatabaseJanitor {
    * @return bool|string
    *   FALSE if dump encountered an error, otherwise return location of dump.
    */
-  public function dump($host = FALSE, $output = FALSE) {
+  public function dump($host = FALSE, $output = FALSE, $trim = FALSE) {
     if (!$output) {
       $output = 'php://stdout';
     }
@@ -65,13 +65,15 @@ class DatabaseJanitor {
     $dumpSettings = [
       'add-locks'      => FALSE,
       'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? [],
-      'no-data' => $this->dumpOptions['no-data'],
+      'no-data' => $this->dumpOptions['no-data'] ?? [],
     ];
     try {
       $dump = new Mysqldump('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, $dumpSettings);
-      $dump->setTransformTableNameHook(function($table_name, $reset) {
-        return $this->rename_table($table_name, $reset);
-      });
+      if ($trim) {
+          $dump->setTransformTableNameHook(function ($table_name, $reset) {
+              return $this->rename_table($table_name, $reset);
+          });
+      }
       $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
         return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions);
       });

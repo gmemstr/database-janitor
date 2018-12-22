@@ -87,7 +87,7 @@ class DatabaseJanitorCommand extends Command {
 
     if (!$input->getOption('trim')) {
       fwrite(STDERR, "Dumping database. \n");
-      $dumpresult = $this->janitor->dump();
+      $dumpresult = $this->janitor->dump(null, null, FALSE);
       if (!$dumpresult) {
         $output->writeln("Something went horribly wrong.");
       }
@@ -106,7 +106,7 @@ class DatabaseJanitorCommand extends Command {
         $this->database, $this->username, $this->host, $this->password, $this->configuration
       );
       fwrite(STDERR, "Dumping database.\n");
-      $dumpresult = $this->janitor->dump();
+      $dumpresult = $this->janitor->dump(null, null, TRUE);
       if (!$dumpresult) {
         printf("Something went horribly wrong.");
       }
