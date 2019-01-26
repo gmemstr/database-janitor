@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "299be4143ddeec4fe0c0b808f4dba9e4",
+    "content-hash": "f5a067c29bee7c00b3b82404be0982b7",
     "packages": [
         {
             "name": "ifsnop/mysqldump-php",
-            "version": "dev-table-name-hook",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gmemstr/mysqldump-php.git",
-                "reference": "4f7e6440f7c9acaeed043ee9791a9c3c62e9f961"
+                "reference": "9a892dbbfde4761c5ce1a06c7e92258487029dad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gmemstr/mysqldump-php/zipball/4f7e6440f7c9acaeed043ee9791a9c3c62e9f961",
-                "reference": "4f7e6440f7c9acaeed043ee9791a9c3c62e9f961",
+                "url": "https://api.github.com/repos/gmemstr/mysqldump-php/zipball/9a892dbbfde4761c5ce1a06c7e92258487029dad",
+                "reference": "9a892dbbfde4761c5ce1a06c7e92258487029dad",
                 "shasum": ""
             },
             "require": {
@@ -58,9 +58,9 @@
                 "sql"
             ],
             "support": {
-                "source": "https://github.com/gmemstr/mysqldump-php/tree/table-name-hook"
+                "source": "https://github.com/gmemstr/mysqldump-php/tree/master"
             },
-            "time": "2018-12-21T22:14:00+00:00"
+            "time": "2019-01-26T06:09:52+00:00"
         },
         {
             "name": "symfony/console",
@@ -68,12 +68,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "3f8a62ad1763ab3a43b1e30d90a6f443bab15fa5"
+                "reference": "c195108dddab91f51b9c57f63e8b184d0a257a54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/3f8a62ad1763ab3a43b1e30d90a6f443bab15fa5",
-                "reference": "3f8a62ad1763ab3a43b1e30d90a6f443bab15fa5",
+                "url": "https://api.github.com/repos/symfony/console/zipball/c195108dddab91f51b9c57f63e8b184d0a257a54",
+                "reference": "c195108dddab91f51b9c57f63e8b184d0a257a54",
                 "shasum": ""
             },
             "require": {
@@ -85,6 +85,9 @@
                 "symfony/dependency-injection": "<3.4",
                 "symfony/process": "<3.3"
             },
+            "provide": {
+                "psr/log-implementation": "1.0"
+            },
             "require-dev": {
                 "psr/log": "~1.0",
                 "symfony/config": "~3.4|~4.0",
@@ -94,7 +97,7 @@
                 "symfony/process": "~3.4|~4.0"
             },
             "suggest": {
-                "psr/log-implementation": "For using the console logger",
+                "psr/log": "For using the console logger",
                 "symfony/event-dispatcher": "",
                 "symfony/lock": "",
                 "symfony/process": ""
@@ -129,7 +132,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2018-12-17T13:51:43+00:00"
+            "time": "2019-01-25T14:35:46+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -244,7 +247,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -322,12 +325,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "3a51c82e368190e2c829926bf7b512ac6902a853"
+                "reference": "4c7b2f8f8492da1729aef4c516447716d2987fe6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/3a51c82e368190e2c829926bf7b512ac6902a853",
-                "reference": "3a51c82e368190e2c829926bf7b512ac6902a853",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/4c7b2f8f8492da1729aef4c516447716d2987fe6",
+                "reference": "4c7b2f8f8492da1729aef4c516447716d2987fe6",
                 "shasum": ""
             },
             "require": {
@@ -373,7 +376,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-12-13T12:43:21+00:00"
+            "time": "2019-01-16T21:53:39+00:00"
         }
     ],
     "packages-dev": [
@@ -1092,12 +1095,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "390bffe2265aac8184fdf86400c0d0841e65bc4b"
+                "reference": "8c94cf9231dc70e8cb45c52a8f3a34501e271da0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/390bffe2265aac8184fdf86400c0d0841e65bc4b",
-                "reference": "390bffe2265aac8184fdf86400c0d0841e65bc4b",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/8c94cf9231dc70e8cb45c52a8f3a34501e271da0",
+                "reference": "8c94cf9231dc70e8cb45c52a8f3a34501e271da0",
                 "shasum": ""
             },
             "require": {
@@ -1135,7 +1138,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-12-21T04:12:30+00:00"
+            "time": "2019-01-23T00:15:48+00:00"
         },
         {
             "name": "symfony/finder",
@@ -1143,12 +1146,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "d2bae4531a8d48ee610ec664d10336c9500e3a64"
+                "reference": "7f64183e3ee0cda0644f31ed8f37f01e800af5e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/d2bae4531a8d48ee610ec664d10336c9500e3a64",
-                "reference": "d2bae4531a8d48ee610ec664d10336c9500e3a64",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/7f64183e3ee0cda0644f31ed8f37f01e800af5e8",
+                "reference": "7f64183e3ee0cda0644f31ed8f37f01e800af5e8",
                 "shasum": ""
             },
             "require": {
@@ -1184,7 +1187,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-12-13T12:43:21+00:00"
+            "time": "2019-01-16T21:53:39+00:00"
         },
         {
             "name": "symfony/process",
@@ -1192,12 +1195,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "d87c6f01ac6dfc4af25c0f4fb7eeecdc03927615"
+                "reference": "9a8319d32b6c338826f9181aadfa8865b31ed9f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/d87c6f01ac6dfc4af25c0f4fb7eeecdc03927615",
-                "reference": "d87c6f01ac6dfc4af25c0f4fb7eeecdc03927615",
+                "url": "https://api.github.com/repos/symfony/process/zipball/9a8319d32b6c338826f9181aadfa8865b31ed9f8",
+                "reference": "9a8319d32b6c338826f9181aadfa8865b31ed9f8",
                 "shasum": ""
             },
             "require": {
@@ -1233,7 +1236,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2018-12-13T12:43:21+00:00"
+            "time": "2019-01-24T22:35:38+00:00"
         },
         {
             "name": "webignition/readable-duration",

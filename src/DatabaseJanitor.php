@@ -14,15 +14,10 @@ use Ifsnop\Mysqldump\Mysqldump;
 class DatabaseJanitor {
 
   private $password;
-
   private $host;
-
   private $user;
-
   private $database;
-
   private $dumpOptions;
-
   private $connection;
 
   /**
@@ -66,14 +61,11 @@ class DatabaseJanitor {
       'add-locks' => FALSE,
       'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? [],
       'no-data' => $this->dumpOptions['no-data'] ?? [],
+      'keep-data' => $this->dumpOptions['keep_data'] ?? [],
     ];
+
     try {
       $dump = new Mysqldump('mysql:host=' . $this->host . ';dbname=' . $this->database, $this->user, $this->password, $dumpSettings);
-      if ($trim) {
-        $dump->setTransformTableNameHook(function ($table_name, $reset) {
-          return $this->renameTable($table_name, $reset);
-        });
-      }
       $dump->setTransformColumnValueHook(function ($table_name, $col_name, $col_value) {
         return $this->sanitize($table_name, $col_name, $col_value, $this->dumpOptions);
       });
@@ -127,99 +119,6 @@ class DatabaseJanitor {
     }
 
     return $col_value;
-  }
-
-  /**
-   * Removes every other row from specified table.
-   *
-   * @return array|bool
-   *   FALSE if something goes wrong, otherwise array of removed items.
-   */
-  public function trim() {
-    $ignore = [];
-    if ($this->dumpOptions['trim_tables']) {
-      foreach ($this->dumpOptions['trim_tables'] as $table) {
-        // Skip table if not found.
-        if (!$this->connection->query('SELECT 1 FROM ' . $table . ' LIMIT 1;')) {
-          continue;
-        }
-        $this->connection->exec('CREATE TABLE janitor_' . $table . ' LIKE ' . $table);
-        $ignore[] = $table;
-        // This makes assumptions about the primary key, should be configurable.
-        $primary_key = $this->getPrimaryKey($table);
-        if ($primary_key) {
-          $keep = [];
-          if (isset($this->dumpOptions['keep_rows'][$table])) {
-            $keep = implode(',', $this->dumpOptions['keep_rows'][$table]);
-          }
-          $all = $this->connection->query('SELECT ' . $primary_key . ' FROM ' . $table)
-            ->fetchAll();
-          foreach ($all as $key => $row) {
-            // Delete every other row.
-            if ($key % 4 == 0) {
-              $keep[] = $row[$primary_key];
-            }
-          }
-          $keep = implode(',', $keep);
-          $this->connection->exec('INSERT INTO janitor_' . $table . ' SELECT * FROM ' . $table . ' WHERE ' . $primary_key . ' IN (' . $keep . ')');
-        }
-      }
-    }
-    return $ignore;
-  }
-
-  /**
-   * Post-run to remove janitor_ prefixed tables.
-   *
-   * @param array $tables
-   *   Tables to rename, in the form original_X.
-   *
-   * @return bool
-   *   False if error occurred, true otherwise.
-   */
-  public function cleanup(array $tables) {
-    foreach ($tables as $table) {
-      $table = 'janitor_' . $table;
-      $this->connection->exec('DROP TABLE ' . $table);
-    }
-    return TRUE;
-  }
-
-  /**
-   * Returns primary key of table, if available.
-   *
-   * @param string $table
-   *   Table name.
-   *
-   * @return mixed
-   *   Primary key name.
-   */
-  private function getPrimaryKey($table) {
-    $primary_key = $this->connection->query("SHOW KEYS FROM " . $table . " WHERE Key_name = 'PRIMARY'")
-      ->fetch()['Column_name'];
-
-    return $primary_key;
-  }
-
-  /**
-   * Rename table function hook to manipulate during dump.
-   *
-   * @param string $table_name
-   *   Current table name.
-   * @param bool $reset
-   *   Whether to reset table name back to original (if altered was passed).
-   *
-   * @return string
-   *   Returns the altered table name.
-   */
-  public function renameTable($table_name, $reset) {
-    if (in_array($table_name, $this->dumpOptions['trim_tables'])) {
-      return 'janitor_' . $table_name;
-    }
-    if ($reset) {
-      return str_replace('janitor_', '', $table_name);
-    }
-    return $table_name;
   }
 
 }

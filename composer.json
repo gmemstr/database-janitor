@@ -17,7 +17,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "ifsnop/mysqldump-php": "dev-table-name-hook",
+    "ifsnop/mysqldump-php": "dev-master",
     "symfony/console": "^4.2@dev",
     "symfony/yaml": "^4.2@dev"
   },
