@@ -40,11 +40,11 @@ class DatabaseJanitorCommand extends Command {
   protected function configure() {
     $this->setName('database-janitor')
       ->setDescription('Cleans up databases between servers or dev enviornments')
-      ->addOption('host', NULL, InputOption::VALUE_REQUIRED, 'Database host')
+      ->addOption('host', NULL, InputOption::VALUE_OPTIONAL, 'Database host, defaults to localhost')
       ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'Database username')
       ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Database password')
-      ->addOption('trim', 't', InputOption::VALUE_NONE, 'Whether or not to execute trimming')
-      ->addOption('drupal', 'd', InputOption::VALUE_REQUIRED, 'Path to a Drupal settings file (ignores -u and -p options)')
+      ->addOption('trim', 't', InputOption::VALUE_NONE, 'Whether or not to exclude data from dump (trimming)')
+      ->addOption('drupal', 'd', InputOption::VALUE_REQUIRED, 'Path to a Drupal settings file (ignores host, username and password flags)')
       ->addArgument('database', InputArgument::REQUIRED, 'Database to dump');
   }
 
@@ -55,6 +55,9 @@ class DatabaseJanitorCommand extends Command {
     // Set up configuration.
     $helper = $this->getHelper('question');
     $this->host = $input->getOption('host');
+    if (!$this->host) {
+      $this->host = 'localhost';
+    }
     $this->database = $input->getArgument('database');
     if (!$input->getOption('drupal')) {
       if (!$this->username = $input->getOption('username')) {
