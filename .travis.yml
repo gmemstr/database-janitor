@@ -5,10 +5,4 @@ install:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer install
 
-script: vendor/bin/phpcs -n --standard=vendor/drupal/coder/coder_sniffer/Drupal src
-
-build:
-  provider: script
-  script: mkdir build && vendor/bin/phar-builder package composer.json
-  on:
-    branch: master
+script: vendor/bin/phpcs -n --standard=vendor/drupal/coder/coder_sniffer/Drupal src && mkdir build && vendor/bin/phar-builder package composer.json

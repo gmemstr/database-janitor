@@ -27,11 +27,11 @@ Arguments:
   database                   Database to dump
 
 Options:
-      --host=HOST            Database host
+      --host[=HOST]          Database host, defaults to localhost
   -u, --username[=USERNAME]  Database username
   -p, --password[=PASSWORD]  Database password
-  -t, --trim                 Whether or not to execute trimming
-  -d, --drupal=DRUPAL        Path to a Drupal settings file (ignores -u and -p options)
+  -t, --trim                 Whether or not to exclude data from dump (trimming)
+  -d, --drupal=DRUPAL        Path to a Drupal settings file (ignores host, username and password flags)
   -h, --help                 Display this help message
   -q, --quiet                Do not output any message
   -V, --version              Display this application version
@@ -67,10 +67,17 @@ excluded_tables:
 scrub_tables:
 # Tables to dump sans content.
   - scrub1
-keep_rows:
-  # Specific rows from tables to keep, by primary ID.
-  table:
-    - 1
+keep_data:
+# Keep data in these tables by key
+  table_name:
+    col: col_name
+    # Only row with col value of 1
+    rows:
+      - 1
+  table_name_2:
+  # Every other row, using mod
+    col: other_col_name
+    rows: 2
 ```
 
 ### CLI
