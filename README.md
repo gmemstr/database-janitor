@@ -1,7 +1,11 @@
+<p align="right">Initial development funded by Acro Media Inc.</p>
+
 Database Janitor [![Build Status](https://travis-ci.org/gmemstr/database-janitor.svg?branch=master)](https://travis-ci.org/gmemstr/database-janitor)
 ---
 
 Highly-configurable database dumper
+
+Initial development funded by Acro Media Inc.
 
 ## Features
 
@@ -91,16 +95,13 @@ If not using the .phar, install dependencies with `composer install`.
 
 This will prompt you for the database password, then produce a gzip'd .sql file in the `output/` directory.
 
-By default Janitor output to STDOUT for piping.
-
 ```bash
 ./janitor.phar --host=localhost:8787 --username=real real | gzip -c > output/real_test.sql.gz
 ```
 
 #### Trimming
 
-Trimming allows much smaller database dumps by reducing the data exported. It does so by only keeping every fourth row,
-and allows you to completely scrub tables (e.g caches) to further reduce the size. Is as non destructive as possible - it first renames the original database, copies the contents to a dummy database, dumps, then deletes the dummy database and renames the original back.
+Trimming allows much smaller database dumps by reducing the data exported through the use of keeping data, scrubbing tables, and so on. 
 
 ```bash
 ./janitor.phar --host=localhost:8787 --username=real --trim real | gzip -c > output/real_test.sql.gz
