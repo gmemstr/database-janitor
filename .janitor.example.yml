@@ -11,7 +11,8 @@ excluded_tables:
 scrub_tables:
 # Tables to dump sans content.
   - scrub1
-keep_rows:
-  # Specific rows from tables to keep, by primary ID.
-  table:
-    - 1
+keep_data:
+  table_name:
+    col: col_name
+    rows:
+      - 1

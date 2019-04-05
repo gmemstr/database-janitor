@@ -12,12 +12,12 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/ifsnop/mysqldump-php"
+      "url": "https://github.com/gmemstr/mysqldump-php"
     }
   ],
   "minimum-stability": "dev",
   "require": {
-    "ifsnop/mysqldump-php": "master",
+    "ifsnop/mysqldump-php": "dev-master",
     "symfony/console": "^4.2@dev",
     "symfony/yaml": "^4.2@dev"
   },

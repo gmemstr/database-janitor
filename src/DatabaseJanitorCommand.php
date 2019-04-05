@@ -11,6 +11,7 @@ use Symfony\Component\Console\Question\Question;
 
 require __DIR__ . '/../vendor/autoload.php';
 require 'DatabaseJanitor.php';
+
 /**
  * Class DatabaseJanitorCommand.
  *
@@ -23,7 +24,6 @@ class DatabaseJanitorCommand extends Command {
   private $password;
   private $database;
   private $configuration;
-
   private $janitor;
 
   /**
@@ -40,11 +40,11 @@ class DatabaseJanitorCommand extends Command {
   protected function configure() {
     $this->setName('database-janitor')
       ->setDescription('Cleans up databases between servers or dev enviornments')
-      ->addOption('host', NULL, InputOption::VALUE_REQUIRED, 'Database host')
+      ->addOption('host', NULL, InputOption::VALUE_OPTIONAL, 'Database host, defaults to localhost')
       ->addOption('username', 'u', InputOption::VALUE_OPTIONAL, 'Database username')
       ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Database password')
-      ->addOption('trim', 't', InputOption::VALUE_NONE, 'Whether or not to execute trimming')
-      ->addOption('drupal', 'd', InputOption::VALUE_REQUIRED, 'Path to a Drupal settings file (ignores -u and -p options)')
+      ->addOption('trim', 't', InputOption::VALUE_NONE, 'Whether or not to exclude data from dump (trimming)')
+      ->addOption('drupal', 'd', InputOption::VALUE_REQUIRED, 'Path to a Drupal settings file (ignores host, username and password flags)')
       ->addArgument('database', InputArgument::REQUIRED, 'Database to dump');
   }
 
@@ -52,10 +52,12 @@ class DatabaseJanitorCommand extends Command {
    * Execute Database Janitor functions based on values passed.
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-
     // Set up configuration.
     $helper = $this->getHelper('question');
     $this->host = $input->getOption('host');
+    if (!$this->host) {
+      $this->host = 'localhost';
+    }
     $this->database = $input->getArgument('database');
     if (!$input->getOption('drupal')) {
       if (!$this->username = $input->getOption('username')) {
@@ -74,6 +76,7 @@ class DatabaseJanitorCommand extends Command {
       // "default" until I hear otherwise.
       require_once $input->getOption('drupal');
       if ($databases['default'] && is_array($databases['default'])) {
+        fwrite(STDERR, "Loading Drupal configuration. \n");
         $db_array = $databases['default']['default'];
         $this->host = $db_array['host'];
         $this->username = $db_array['username'];
@@ -81,35 +84,27 @@ class DatabaseJanitorCommand extends Command {
       }
     }
 
-    $this->janitor = new DatabaseJanitor(
-      $this->database, $this->username, $this->host, $this->password, $this->configuration
-    );
-
     if (!$input->getOption('trim')) {
-      $dumpresult = $this->janitor->dump();
+      $this->configuration['keep_data'] = [];
+      $this->janitor = new DatabaseJanitor(
+        $this->database, $this->username, $this->host, $this->password, $this->configuration
+      );
+      fwrite(STDERR, "Dumping database. \n");
+      $dumpresult = $this->janitor->dump(NULL, NULL, FALSE);
       if (!$dumpresult) {
         $output->writeln("Something went horribly wrong.");
       }
     }
 
     else {
-      $trimmed_tables = $this->janitor->trim();
-      $scrubbed_tables = $this->janitor->scrub();
-      $ignore_tables = array_merge($trimmed_tables, $scrubbed_tables);
-
-      foreach ($ignore_tables as $ignore_table) {
-        $this->configuration['excluded_tables'][] = $ignore_table;
-      }
-      // Reload configuration with new ignore tables.
       $this->janitor = new DatabaseJanitor(
         $this->database, $this->username, $this->host, $this->password, $this->configuration
       );
-
-      $dumpresult = $this->janitor->dump();
+      fwrite(STDERR, "Dumping database.\n");
+      $dumpresult = $this->janitor->dump(NULL, NULL, TRUE);
       if (!$dumpresult) {
         printf("Something went horribly wrong.");
       }
-      $this->janitor->cleanup($ignore_tables);
     }
   }
 
