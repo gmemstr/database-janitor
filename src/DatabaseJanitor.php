@@ -60,7 +60,7 @@ class DatabaseJanitor {
     $dumpSettings = [
       'add-locks' => FALSE,
       'exclude-tables' => $this->dumpOptions['excluded_tables'] ?? [],
-      'no-data' => $this->dumpOptions['no-data'] ?? [],
+      'no-data' => $this->dumpOptions['scrub_tables'] ?? [],
       'keep-data' => $this->dumpOptions['keep_data'] ?? [],
     ];
 
