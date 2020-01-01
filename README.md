@@ -82,6 +82,11 @@ keep_data:
   # Every other row, using mod
     col: other_col_name
     rows: 2
+
+  table_name_3:
+  # Every row with a value of 1, 3 or 8.
+    col: third_col_name
+    rows: 1, 3, 8
 ```
 
 ### CLI
