@@ -19,17 +19,52 @@ require 'DatabaseJanitor.php';
  */
 class DatabaseJanitorCommand extends Command {
 
+  /**
+   * Host for connection.
+   *
+   * @var host
+   */
   private $host;
+
+  /**
+   * User for connection.
+   *
+   * @var username
+   */
   private $username;
+
+  /**
+   * Password for connection.
+   *
+   * @var password
+   */
   private $password;
+
+  /**
+   * Databaseeeee for connection.
+   *
+   * @var database
+   */
   private $database;
+
+  /**
+   * Configuration for this session.
+   *
+   * @var confirmation
+   */
   private $configuration;
+
+  /**
+   * Database janitor class instance.
+   *
+   * @var janitor
+   */
   private $janitor;
 
   /**
    * DatabaseJanitorCommand constructor.
    */
-  public function __construct($configuration = array()) {
+  public function __construct($configuration = []) {
     parent::__construct();
     $this->configuration = $configuration;
   }

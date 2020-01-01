@@ -1,0 +1,60 @@
+# Ported from Travis configuration file.
+# language: php
+# php:
+#   - 7.2
+# install:
+#   - export PATH="$HOME/.composer/vendor/bin:$PATH"
+#   - composer install
+#
+# script: vendor/bin/phpcs -n --standard=vendor/drupal/coder/coder_sniffer/Drupal src && mkdir build && vendor/bin/phar-builder package composer.json
+version: 2.0
+jobs:
+  install:
+    docker:
+      # @TODO: Update & validate this to latest PHP version.
+      - image: gmemstr/php-phar-bcmath:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - composer-{{ checksum "composer.lock" }}-v2
+          - composer-{{ checksum "composer.lock" }}
+          - composer-
+      - run: composer install
+      - save_cache:
+          key: composer-{{ checksum "composer.lock" }}-v2
+          paths:
+            - vendor
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - .
+  code_smell:
+    docker:
+      - image: gmemstr/php-phar-bcmath:latest
+    steps:
+      - attach_workspace:
+          at: .
+      - run: project/vendor/bin/phpcs -n --standard=project/vendor/drupal/coder/coder_sniffer/Drupal project/src
+  build:
+    docker:
+      - image: gmemstr/php-phar-bcmath:latest
+    steps:
+      - attach_workspace:
+          at: .
+      - run: mkdir build
+      - run: project/vendor/bin/phar-builder package project/composer.json
+      - store_artifacts:
+          path: build
+
+workflows:
+  version: 2
+  full:
+    jobs:
+    - install
+    - code_smell:
+        requires:
+          - install
+    - build:
+        requires:
+          - code_smell

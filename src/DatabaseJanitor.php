@@ -13,11 +13,46 @@ use Ifsnop\Mysqldump\Mysqldump;
  */
 class DatabaseJanitor {
 
+  /**
+   * Password for connection.
+   *
+   * @var password
+   */
   private $password;
+
+  /**
+   * Host for connection.
+   *
+   * @var host
+   */
   private $host;
+
+  /**
+   * User for connection.
+   *
+   * @var user
+   */
   private $user;
+
+  /**
+   * Databaseeeee for connection.
+   *
+   * @var database
+   */
   private $database;
+
+  /**
+   * Dump options for this session.
+   *
+   * @var dumpOptions
+   */
   private $dumpOptions;
+
+  /**
+   * Connection for this session.
+   *
+   * @var connection
+   */
   private $connection;
 
   /**
