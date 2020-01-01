@@ -1,0 +1,55 @@
+# Ported from Travis configuration file.
+# language: php
+# php:
+#   - 7.2
+# install:
+#   - export PATH="$HOME/.composer/vendor/bin:$PATH"
+#   - composer install
+#
+# script: vendor/bin/phpcs -n --standard=vendor/drupal/coder/coder_sniffer/Drupal src && mkdir build && vendor/bin/phar-builder package composer.json
+version: 2.0
+jobs:
+  install:
+    docker:
+      # @TODO: Update & validate this to latest PHP version.
+      - image: circleci/php:7.2.9-cli
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - composer-{{ checksum "composer.lock" }}
+          - composer-
+      - run: composer install
+      - save_cache:
+          key: composer-{{ checksum "composer.lock" }}
+          paths:
+            - vender
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - project
+  code_smell:
+    docker:
+      - image: circleci/php:7.2.9-cli
+    steps:
+      - attach_workspace:
+          at: .
+      - run: vendor/bin/phpcs -n --standard=vendor/drupal/coder/coder_sniffer/Drupal src
+  build:
+    docker:
+      - image: circleci/php:7.2.9-cli
+    steps:
+      - attach_workspace:
+          at: .
+      - run: mkdir build
+      - run: vendor/bin/phar-builder package composer.json
+      - store_artifacts:
+          path: build
+
+workflows:
+  version: 2
+  full:
+    jobs:
+    - install
+    - code_smell
+    - build
