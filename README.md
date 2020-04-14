@@ -50,6 +50,11 @@ sanitize_tables:
   # List of tables and their columns you want sanitized.
   user:
   - mail
+sanitize_tables_default:
+  node:
+    uid: 1
+  node_revision:
+    uid: 1
 trim_tables:
 # List of tables to be trimmed (every 4th row kept)
   - trim1
