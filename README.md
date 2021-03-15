@@ -1,11 +1,9 @@
 <p align="right">Initial development funded by Acro Media Inc.</p>
 
-Database Janitor [![Build Status](https://travis-ci.org/gmemstr/database-janitor.svg?branch=master)](https://travis-ci.org/gmemstr/database-janitor)
+Database Janitor
 ---
 
 Highly-configurable database dumper
-
-Initial development funded by Acro Media Inc.
 
 ## Features
 
