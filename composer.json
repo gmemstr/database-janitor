@@ -45,5 +45,10 @@
     "macfja/phar-builder": "dev-master",
     "squizlabs/php_codesniffer": "*",
     "drupal/coder": "^8.3"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

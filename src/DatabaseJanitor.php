@@ -142,7 +142,7 @@ class DatabaseJanitor {
                   return random_int(1000000, 9999999);
 
                 case 'string':
-                  return (string) random_int(1000000, 9999999) . '-janitor';
+                  return uniqid("janitor");
 
                 default:
                   return $col_value;
