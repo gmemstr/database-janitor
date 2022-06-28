@@ -43,7 +43,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: mkdir build
-      - run: project/vendor/bin/phar-builder package project/composer.json
+      - run: php -d phar.readonly=0 project/vendor/bin/phar-builder package project/composer.json
       - store_artifacts:
           path: build
 
