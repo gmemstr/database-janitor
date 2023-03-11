@@ -154,6 +154,18 @@ class DatabaseJanitor {
       }
     }
 
+    if (isset($options['sanitize_tables_default'])) {
+      foreach ($options['sanitize_tables_default'] as $table => $val) {
+        if ($table == $table_name) {
+          foreach ($options['sanitize_tables_default'][$table] as $col => $val) {
+            if ($col == $col_name) {
+              return $val;
+            }
+          }
+        }
+      }
+    }
+
     return $col_value;
   }
 
